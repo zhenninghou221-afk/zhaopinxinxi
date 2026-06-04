@@ -1,4 +1,2 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const util = require("node:util");
-exports.default = (obj) => util.types.isKeyObject(obj);
+import * as util from 'node:util';
+export default (obj) => util.types.isKeyObject(obj);

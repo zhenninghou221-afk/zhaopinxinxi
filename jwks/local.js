@@ -1,9 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.createLocalJWKSet = createLocalJWKSet;
-const import_js_1 = require("../key/import.js");
-const errors_js_1 = require("../util/errors.js");
-const is_object_js_1 = require("../lib/is_object.js");
+import { importJWK } from '../key/import.js';
+import { JWKSInvalid, JOSENotSupported, JWKSNoMatchingKey, JWKSMultipleMatchingKeys, } from '../util/errors.js';
+import isObject from '../lib/is_object.js';
 function getKtyFromAlg(alg) {
     switch (typeof alg === 'string' && alg.slice(0, 2)) {
         case 'RS':
@@ -14,7 +11,7 @@ function getKtyFromAlg(alg) {
         case 'Ed':
             return 'OKP';
         default:
-            throw new errors_js_1.JOSENotSupported('Unsupported "alg" value for a JSON Web Key Set');
+            throw new JOSENotSupported('Unsupported "alg" value for a JSON Web Key Set');
     }
 }
 function isJWKSLike(jwks) {
@@ -24,7 +21,7 @@ function isJWKSLike(jwks) {
         jwks.keys.every(isJWKLike));
 }
 function isJWKLike(key) {
-    return (0, is_object_js_1.default)(key);
+    return isObject(key);
 }
 function clone(obj) {
     if (typeof structuredClone === 'function') {
@@ -37,7 +34,7 @@ class LocalJWKSet {
     _cached = new WeakMap();
     constructor(jwks) {
         if (!isJWKSLike(jwks)) {
-            throw new errors_js_1.JWKSInvalid('JSON Web Key Set malformed');
+            throw new JWKSInvalid('JSON Web Key Set malformed');
         }
         this._jwks = clone(jwks);
     }
@@ -84,10 +81,10 @@ class LocalJWKSet {
         });
         const { 0: jwk, length } = candidates;
         if (length === 0) {
-            throw new errors_js_1.JWKSNoMatchingKey();
+            throw new JWKSNoMatchingKey();
         }
         if (length !== 1) {
-            const error = new errors_js_1.JWKSMultipleMatchingKeys();
+            const error = new JWKSMultipleMatchingKeys();
             const { _cached } = this;
             error[Symbol.asyncIterator] = async function* () {
                 for (const jwk of candidates) {
@@ -105,15 +102,15 @@ class LocalJWKSet {
 async function importWithAlgCache(cache, jwk, alg) {
     const cached = cache.get(jwk) || cache.set(jwk, {}).get(jwk);
     if (cached[alg] === undefined) {
-        const key = await (0, import_js_1.importJWK)({ ...jwk, ext: true }, alg);
+        const key = await importJWK({ ...jwk, ext: true }, alg);
         if (key instanceof Uint8Array || key.type !== 'public') {
-            throw new errors_js_1.JWKSInvalid('JSON Web Key Set members must be public keys');
+            throw new JWKSInvalid('JSON Web Key Set members must be public keys');
         }
         cached[alg] = key;
     }
     return cached[alg];
 }
-function createLocalJWKSet(jwks) {
+export function createLocalJWKSet(jwks) {
     const set = new LocalJWKSet(jwks);
     const localJWKSet = async (protectedHeader, token) => set.getKey(protectedHeader, token);
     Object.defineProperties(localJWKSet, {

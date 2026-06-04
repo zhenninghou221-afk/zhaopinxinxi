@@ -1,3 +1,1 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = 'node:crypto';
+export default 'node:crypto';

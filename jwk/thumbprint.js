@@ -1,19 +1,15 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.calculateJwkThumbprint = calculateJwkThumbprint;
-exports.calculateJwkThumbprintUri = calculateJwkThumbprintUri;
-const digest_js_1 = require("../runtime/digest.js");
-const base64url_js_1 = require("../runtime/base64url.js");
-const errors_js_1 = require("../util/errors.js");
-const buffer_utils_js_1 = require("../lib/buffer_utils.js");
-const is_object_js_1 = require("../lib/is_object.js");
+import digest from '../runtime/digest.js';
+import { encode as base64url } from '../runtime/base64url.js';
+import { JOSENotSupported, JWKInvalid } from '../util/errors.js';
+import { encoder } from '../lib/buffer_utils.js';
+import isObject from '../lib/is_object.js';
 const check = (value, description) => {
     if (typeof value !== 'string' || !value) {
-        throw new errors_js_1.JWKInvalid(`${description} missing or invalid`);
+        throw new JWKInvalid(`${description} missing or invalid`);
     }
 };
-async function calculateJwkThumbprint(jwk, digestAlgorithm) {
-    if (!(0, is_object_js_1.default)(jwk)) {
+export async function calculateJwkThumbprint(jwk, digestAlgorithm) {
+    if (!isObject(jwk)) {
         throw new TypeError('JWK must be an object');
     }
     digestAlgorithm ??= 'sha256';
@@ -45,12 +41,12 @@ async function calculateJwkThumbprint(jwk, digestAlgorithm) {
             components = { k: jwk.k, kty: jwk.kty };
             break;
         default:
-            throw new errors_js_1.JOSENotSupported('"kty" (Key Type) Parameter missing or unsupported');
+            throw new JOSENotSupported('"kty" (Key Type) Parameter missing or unsupported');
     }
-    const data = buffer_utils_js_1.encoder.encode(JSON.stringify(components));
-    return (0, base64url_js_1.encode)(await (0, digest_js_1.default)(digestAlgorithm, data));
+    const data = encoder.encode(JSON.stringify(components));
+    return base64url(await digest(digestAlgorithm, data));
 }
-async function calculateJwkThumbprintUri(jwk, digestAlgorithm) {
+export async function calculateJwkThumbprintUri(jwk, digestAlgorithm) {
     digestAlgorithm ??= 'sha256';
     const thumbprint = await calculateJwkThumbprint(jwk, digestAlgorithm);
     return `urn:ietf:params:oauth:jwk-thumbprint:sha-${digestAlgorithm.slice(-3)}:${thumbprint}`;

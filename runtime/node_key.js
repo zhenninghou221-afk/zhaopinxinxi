@@ -1,21 +1,18 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = keyForCrypto;
-const node_crypto_1 = require("node:crypto");
-const get_named_curve_js_1 = require("./get_named_curve.js");
-const errors_js_1 = require("../util/errors.js");
-const check_key_length_js_1 = require("./check_key_length.js");
+import { constants, KeyObject } from 'node:crypto';
+import getNamedCurve from './get_named_curve.js';
+import { JOSENotSupported } from '../util/errors.js';
+import checkKeyLength from './check_key_length.js';
 const ecCurveAlgMap = new Map([
     ['ES256', 'P-256'],
     ['ES256K', 'secp256k1'],
     ['ES384', 'P-384'],
     ['ES512', 'P-521'],
 ]);
-function keyForCrypto(alg, key) {
+export default function keyForCrypto(alg, key) {
     let asymmetricKeyType;
     let asymmetricKeyDetails;
     let isJWK;
-    if (key instanceof node_crypto_1.KeyObject) {
+    if (key instanceof KeyObject) {
         asymmetricKeyType = key.asymmetricKeyType;
         asymmetricKeyDetails = key.asymmetricKeyDetails;
     }
@@ -61,7 +58,7 @@ function keyForCrypto(alg, key) {
             if (asymmetricKeyType !== 'rsa') {
                 throw new TypeError('Invalid key for this operation, its asymmetricKeyType must be rsa');
             }
-            (0, check_key_length_js_1.default)(key, alg);
+            checkKeyLength(key, alg);
             break;
         case 'PS256':
         case 'PS384':
@@ -80,10 +77,10 @@ function keyForCrypto(alg, key) {
             else if (asymmetricKeyType !== 'rsa') {
                 throw new TypeError('Invalid key for this operation, its asymmetricKeyType must be rsa or rsa-pss');
             }
-            (0, check_key_length_js_1.default)(key, alg);
+            checkKeyLength(key, alg);
             options = {
-                padding: node_crypto_1.constants.RSA_PKCS1_PSS_PADDING,
-                saltLength: node_crypto_1.constants.RSA_PSS_SALTLEN_DIGEST,
+                padding: constants.RSA_PKCS1_PSS_PADDING,
+                saltLength: constants.RSA_PSS_SALTLEN_DIGEST,
             };
             break;
         case 'ES256':
@@ -93,7 +90,7 @@ function keyForCrypto(alg, key) {
             if (asymmetricKeyType !== 'ec') {
                 throw new TypeError('Invalid key for this operation, its asymmetricKeyType must be ec');
             }
-            const actual = (0, get_named_curve_js_1.default)(key);
+            const actual = getNamedCurve(key);
             const expected = ecCurveAlgMap.get(alg);
             if (actual !== expected) {
                 throw new TypeError(`Invalid key curve for the algorithm, its curve must be ${expected}, got ${actual}`);
@@ -102,7 +99,7 @@ function keyForCrypto(alg, key) {
             break;
         }
         default:
-            throw new errors_js_1.JOSENotSupported(`alg ${alg} is not supported either by JOSE or your javascript runtime`);
+            throw new JOSENotSupported(`alg ${alg} is not supported either by JOSE or your javascript runtime`);
     }
     if (isJWK) {
         return { format: 'jwk', key, ...options };

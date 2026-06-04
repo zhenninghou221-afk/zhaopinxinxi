@@ -1,10 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const http = require("node:http");
-const https = require("node:https");
-const node_events_1 = require("node:events");
-const errors_js_1 = require("../util/errors.js");
-const buffer_utils_js_1 = require("../lib/buffer_utils.js");
+import * as http from 'node:http';
+import * as https from 'node:https';
+import { once } from 'node:events';
+import { JOSEError, JWKSTimeout } from '../util/errors.js';
+import { concat, decoder } from '../lib/buffer_utils.js';
 const fetchJwks = async (url, timeout, options) => {
     let get;
     switch (url.protocol) {
@@ -23,23 +21,23 @@ const fetchJwks = async (url, timeout, options) => {
         timeout,
         headers,
     });
-    const [response] = (await Promise.race([(0, node_events_1.once)(req, 'response'), (0, node_events_1.once)(req, 'timeout')]));
+    const [response] = (await Promise.race([once(req, 'response'), once(req, 'timeout')]));
     if (!response) {
         req.destroy();
-        throw new errors_js_1.JWKSTimeout();
+        throw new JWKSTimeout();
     }
     if (response.statusCode !== 200) {
-        throw new errors_js_1.JOSEError('Expected 200 OK from the JSON Web Key Set HTTP response');
+        throw new JOSEError('Expected 200 OK from the JSON Web Key Set HTTP response');
     }
     const parts = [];
     for await (const part of response) {
         parts.push(part);
     }
     try {
-        return JSON.parse(buffer_utils_js_1.decoder.decode((0, buffer_utils_js_1.concat)(...parts)));
+        return JSON.parse(decoder.decode(concat(...parts)));
     }
     catch {
-        throw new errors_js_1.JOSEError('Failed to parse the JSON Web Key Set HTTP response as JSON');
+        throw new JOSEError('Failed to parse the JSON Web Key Set HTTP response as JSON');
     }
 };
-exports.default = fetchJwks;
+export default fetchJwks;

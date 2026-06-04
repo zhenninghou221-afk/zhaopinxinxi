@@ -1,8 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const node_crypto_1 = require("node:crypto");
+import { getCiphers } from 'node:crypto';
 let ciphers;
-exports.default = (algorithm) => {
-    ciphers ||= new Set((0, node_crypto_1.getCiphers)());
+export default (algorithm) => {
+    ciphers ||= new Set(getCiphers());
     return ciphers.has(algorithm);
 };

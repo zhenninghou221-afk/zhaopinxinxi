@@ -1,35 +1,32 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.decodeJwt = decodeJwt;
-const base64url_js_1 = require("./base64url.js");
-const buffer_utils_js_1 = require("../lib/buffer_utils.js");
-const is_object_js_1 = require("../lib/is_object.js");
-const errors_js_1 = require("./errors.js");
-function decodeJwt(jwt) {
+import { decode as base64url } from './base64url.js';
+import { decoder } from '../lib/buffer_utils.js';
+import isObject from '../lib/is_object.js';
+import { JWTInvalid } from './errors.js';
+export function decodeJwt(jwt) {
     if (typeof jwt !== 'string')
-        throw new errors_js_1.JWTInvalid('JWTs must use Compact JWS serialization, JWT must be a string');
+        throw new JWTInvalid('JWTs must use Compact JWS serialization, JWT must be a string');
     const { 1: payload, length } = jwt.split('.');
     if (length === 5)
-        throw new errors_js_1.JWTInvalid('Only JWTs using Compact JWS serialization can be decoded');
+        throw new JWTInvalid('Only JWTs using Compact JWS serialization can be decoded');
     if (length !== 3)
-        throw new errors_js_1.JWTInvalid('Invalid JWT');
+        throw new JWTInvalid('Invalid JWT');
     if (!payload)
-        throw new errors_js_1.JWTInvalid('JWTs must contain a payload');
+        throw new JWTInvalid('JWTs must contain a payload');
     let decoded;
     try {
-        decoded = (0, base64url_js_1.decode)(payload);
+        decoded = base64url(payload);
     }
     catch {
-        throw new errors_js_1.JWTInvalid('Failed to base64url decode the payload');
+        throw new JWTInvalid('Failed to base64url decode the payload');
     }
     let result;
     try {
-        result = JSON.parse(buffer_utils_js_1.decoder.decode(decoded));
+        result = JSON.parse(decoder.decode(decoded));
     }
     catch {
-        throw new errors_js_1.JWTInvalid('Failed to parse the decoded payload as JSON');
+        throw new JWTInvalid('Failed to parse the decoded payload as JSON');
     }
-    if (!(0, is_object_js_1.default)(result))
-        throw new errors_js_1.JWTInvalid('Invalid JWT Claims Set');
+    if (!isObject(result))
+        throw new JWTInvalid('Invalid JWT Claims Set');
     return result;
 }

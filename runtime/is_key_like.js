@@ -1,11 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.types = void 0;
-const webcrypto_js_1 = require("./webcrypto.js");
-const is_key_object_js_1 = require("./is_key_object.js");
-exports.default = (key) => (0, is_key_object_js_1.default)(key) || (0, webcrypto_js_1.isCryptoKey)(key);
+import webcrypto, { isCryptoKey } from './webcrypto.js';
+import isKeyObject from './is_key_object.js';
+export default (key) => isKeyObject(key) || isCryptoKey(key);
 const types = ['KeyObject'];
-exports.types = types;
-if (globalThis.CryptoKey || webcrypto_js_1.default?.CryptoKey) {
+if (globalThis.CryptoKey || webcrypto?.CryptoKey) {
     types.push('CryptoKey');
 }
+export { types };

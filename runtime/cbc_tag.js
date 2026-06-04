@@ -1,11 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = cbcTag;
-const node_crypto_1 = require("node:crypto");
-const buffer_utils_js_1 = require("../lib/buffer_utils.js");
-function cbcTag(aad, iv, ciphertext, macSize, macKey, keySize) {
-    const macData = (0, buffer_utils_js_1.concat)(aad, iv, ciphertext, (0, buffer_utils_js_1.uint64be)(aad.length << 3));
-    const hmac = (0, node_crypto_1.createHmac)(`sha${macSize}`, macKey);
+import { createHmac } from 'node:crypto';
+import { concat, uint64be } from '../lib/buffer_utils.js';
+export default function cbcTag(aad, iv, ciphertext, macSize, macKey, keySize) {
+    const macData = concat(aad, iv, ciphertext, uint64be(aad.length << 3));
+    const hmac = createHmac(`sha${macSize}`, macKey);
     hmac.update(macData);
     return hmac.digest().slice(0, keySize >> 3);
 }

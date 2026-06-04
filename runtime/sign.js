@@ -1,19 +1,17 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const crypto = require("node:crypto");
-const node_util_1 = require("node:util");
-const dsa_digest_js_1 = require("./dsa_digest.js");
-const hmac_digest_js_1 = require("./hmac_digest.js");
-const node_key_js_1 = require("./node_key.js");
-const get_sign_verify_key_js_1 = require("./get_sign_verify_key.js");
-const oneShotSign = (0, node_util_1.promisify)(crypto.sign);
+import * as crypto from 'node:crypto';
+import { promisify } from 'node:util';
+import nodeDigest from './dsa_digest.js';
+import hmacDigest from './hmac_digest.js';
+import nodeKey from './node_key.js';
+import getSignKey from './get_sign_verify_key.js';
+const oneShotSign = promisify(crypto.sign);
 const sign = async (alg, key, data) => {
-    const k = (0, get_sign_verify_key_js_1.default)(alg, key, 'sign');
+    const k = getSignKey(alg, key, 'sign');
     if (alg.startsWith('HS')) {
-        const hmac = crypto.createHmac((0, hmac_digest_js_1.default)(alg), k);
+        const hmac = crypto.createHmac(hmacDigest(alg), k);
         hmac.update(data);
         return hmac.digest();
     }
-    return oneShotSign((0, dsa_digest_js_1.default)(alg), data, (0, node_key_js_1.default)(alg, k));
+    return oneShotSign(nodeDigest(alg), data, nodeKey(alg, k));
 };
-exports.default = sign;
+export default sign;

@@ -1,14 +1,11 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.weakMap = void 0;
-const node_crypto_1 = require("node:crypto");
-const errors_js_1 = require("../util/errors.js");
-const webcrypto_js_1 = require("./webcrypto.js");
-const is_key_object_js_1 = require("./is_key_object.js");
-const invalid_key_input_js_1 = require("../lib/invalid_key_input.js");
-const is_key_like_js_1 = require("./is_key_like.js");
-const is_jwk_js_1 = require("../lib/is_jwk.js");
-exports.weakMap = new WeakMap();
+import { KeyObject } from 'node:crypto';
+import { JOSENotSupported } from '../util/errors.js';
+import { isCryptoKey } from './webcrypto.js';
+import isKeyObject from './is_key_object.js';
+import invalidKeyInput from '../lib/invalid_key_input.js';
+import { types } from './is_key_like.js';
+import { isJWK } from '../lib/is_jwk.js';
+export const weakMap = new WeakMap();
 const namedCurveToJOSE = (namedCurve) => {
     switch (namedCurve) {
         case 'prime256v1':
@@ -20,22 +17,22 @@ const namedCurveToJOSE = (namedCurve) => {
         case 'secp256k1':
             return 'secp256k1';
         default:
-            throw new errors_js_1.JOSENotSupported('Unsupported key curve for this operation');
+            throw new JOSENotSupported('Unsupported key curve for this operation');
     }
 };
 const getNamedCurve = (kee, raw) => {
     let key;
-    if ((0, webcrypto_js_1.isCryptoKey)(kee)) {
-        key = node_crypto_1.KeyObject.from(kee);
+    if (isCryptoKey(kee)) {
+        key = KeyObject.from(kee);
     }
-    else if ((0, is_key_object_js_1.default)(kee)) {
+    else if (isKeyObject(kee)) {
         key = kee;
     }
-    else if ((0, is_jwk_js_1.isJWK)(kee)) {
+    else if (isJWK(kee)) {
         return kee.crv;
     }
     else {
-        throw new TypeError((0, invalid_key_input_js_1.default)(kee, ...is_key_like_js_1.types));
+        throw new TypeError(invalidKeyInput(kee, ...types));
     }
     if (key.type === 'secret') {
         throw new TypeError('only "private" or "public" type keys can be used for this operation');
@@ -58,4 +55,4 @@ const getNamedCurve = (kee, raw) => {
             throw new TypeError('Invalid asymmetric key type for this operation');
     }
 };
-exports.default = getNamedCurve;
+export default getNamedCurve;

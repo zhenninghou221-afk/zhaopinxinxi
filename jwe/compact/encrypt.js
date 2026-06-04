@@ -1,11 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.CompactEncrypt = void 0;
-const encrypt_js_1 = require("../flattened/encrypt.js");
-class CompactEncrypt {
+import { FlattenedEncrypt } from '../flattened/encrypt.js';
+export class CompactEncrypt {
     _flattened;
     constructor(plaintext) {
-        this._flattened = new encrypt_js_1.FlattenedEncrypt(plaintext);
+        this._flattened = new FlattenedEncrypt(plaintext);
     }
     setContentEncryptionKey(cek) {
         this._flattened.setContentEncryptionKey(cek);
@@ -28,4 +25,3 @@ class CompactEncrypt {
         return [jwe.protected, jwe.encrypted_key, jwe.iv, jwe.ciphertext, jwe.tag].join('.');
     }
 }
-exports.CompactEncrypt = CompactEncrypt;

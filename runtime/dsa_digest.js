@@ -1,8 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = dsaDigest;
-const errors_js_1 = require("../util/errors.js");
-function dsaDigest(alg) {
+import { JOSENotSupported } from '../util/errors.js';
+export default function dsaDigest(alg) {
     switch (alg) {
         case 'PS256':
         case 'RS256':
@@ -21,6 +18,6 @@ function dsaDigest(alg) {
         case 'EdDSA':
             return undefined;
         default:
-            throw new errors_js_1.JOSENotSupported(`alg ${alg} is not supported either by JOSE or your javascript runtime`);
+            throw new JOSENotSupported(`alg ${alg} is not supported either by JOSE or your javascript runtime`);
     }
 }

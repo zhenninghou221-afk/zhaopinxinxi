@@ -1,28 +1,25 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.decrypt = exports.encrypt = void 0;
-const node_crypto_1 = require("node:crypto");
-const node_util_1 = require("node:util");
-const check_key_length_js_1 = require("./check_key_length.js");
-const webcrypto_js_1 = require("./webcrypto.js");
-const crypto_key_js_1 = require("../lib/crypto_key.js");
-const is_key_object_js_1 = require("./is_key_object.js");
-const invalid_key_input_js_1 = require("../lib/invalid_key_input.js");
-const is_key_like_js_1 = require("./is_key_like.js");
+import { KeyObject, publicEncrypt, constants, privateDecrypt } from 'node:crypto';
+import { deprecate } from 'node:util';
+import checkKeyLength from './check_key_length.js';
+import { isCryptoKey } from './webcrypto.js';
+import { checkEncCryptoKey } from '../lib/crypto_key.js';
+import isKeyObject from './is_key_object.js';
+import invalidKeyInput from '../lib/invalid_key_input.js';
+import { types } from './is_key_like.js';
 const checkKey = (key, alg) => {
     if (key.asymmetricKeyType !== 'rsa') {
         throw new TypeError('Invalid key for this operation, its asymmetricKeyType must be rsa');
     }
-    (0, check_key_length_js_1.default)(key, alg);
+    checkKeyLength(key, alg);
 };
-const RSA1_5 = (0, node_util_1.deprecate)(() => node_crypto_1.constants.RSA_PKCS1_PADDING, 'The RSA1_5 "alg" (JWE Algorithm) is deprecated and will be removed in the next major revision.');
+const RSA1_5 = deprecate(() => constants.RSA_PKCS1_PADDING, 'The RSA1_5 "alg" (JWE Algorithm) is deprecated and will be removed in the next major revision.');
 const resolvePadding = (alg) => {
     switch (alg) {
         case 'RSA-OAEP':
         case 'RSA-OAEP-256':
         case 'RSA-OAEP-384':
         case 'RSA-OAEP-512':
-            return node_crypto_1.constants.RSA_PKCS1_OAEP_PADDING;
+            return constants.RSA_PKCS1_OAEP_PADDING;
         case 'RSA1_5':
             return RSA1_5();
         default:
@@ -44,28 +41,26 @@ const resolveOaepHash = (alg) => {
     }
 };
 function ensureKeyObject(key, alg, ...usages) {
-    if ((0, is_key_object_js_1.default)(key)) {
+    if (isKeyObject(key)) {
         return key;
     }
-    if ((0, webcrypto_js_1.isCryptoKey)(key)) {
-        (0, crypto_key_js_1.checkEncCryptoKey)(key, alg, ...usages);
-        return node_crypto_1.KeyObject.from(key);
+    if (isCryptoKey(key)) {
+        checkEncCryptoKey(key, alg, ...usages);
+        return KeyObject.from(key);
     }
-    throw new TypeError((0, invalid_key_input_js_1.default)(key, ...is_key_like_js_1.types));
+    throw new TypeError(invalidKeyInput(key, ...types));
 }
-const encrypt = (alg, key, cek) => {
+export const encrypt = (alg, key, cek) => {
     const padding = resolvePadding(alg);
     const oaepHash = resolveOaepHash(alg);
     const keyObject = ensureKeyObject(key, alg, 'wrapKey', 'encrypt');
     checkKey(keyObject, alg);
-    return (0, node_crypto_1.publicEncrypt)({ key: keyObject, oaepHash, padding }, cek);
+    return publicEncrypt({ key: keyObject, oaepHash, padding }, cek);
 };
-exports.encrypt = encrypt;
-const decrypt = (alg, key, encryptedKey) => {
+export const decrypt = (alg, key, encryptedKey) => {
     const padding = resolvePadding(alg);
     const oaepHash = resolveOaepHash(alg);
     const keyObject = ensureKeyObject(key, alg, 'unwrapKey', 'decrypt');
     checkKey(keyObject, alg);
-    return (0, node_crypto_1.privateDecrypt)({ key: keyObject, oaepHash, padding }, encryptedKey);
+    return privateDecrypt({ key: keyObject, oaepHash, padding }, encryptedKey);
 };
-exports.decrypt = decrypt;

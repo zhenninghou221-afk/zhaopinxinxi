@@ -1,10 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const node_crypto_1 = require("node:crypto");
+import { createPrivateKey, createPublicKey } from 'node:crypto';
 const parse = (key) => {
     if (key.d) {
-        return (0, node_crypto_1.createPrivateKey)({ format: 'jwk', key });
+        return createPrivateKey({ format: 'jwk', key });
     }
-    return (0, node_crypto_1.createPublicKey)({ format: 'jwk', key });
+    return createPublicKey({ format: 'jwk', key });
 };
-exports.default = parse;
+export default parse;

@@ -1,10 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.decodeProtectedHeader = decodeProtectedHeader;
-const base64url_js_1 = require("./base64url.js");
-const buffer_utils_js_1 = require("../lib/buffer_utils.js");
-const is_object_js_1 = require("../lib/is_object.js");
-function decodeProtectedHeader(token) {
+import { decode as base64url } from './base64url.js';
+import { decoder } from '../lib/buffer_utils.js';
+import isObject from '../lib/is_object.js';
+export function decodeProtectedHeader(token) {
     let protectedB64u;
     if (typeof token === 'string') {
         const parts = token.split('.');
@@ -25,8 +22,8 @@ function decodeProtectedHeader(token) {
         if (typeof protectedB64u !== 'string' || !protectedB64u) {
             throw new Error();
         }
-        const result = JSON.parse(buffer_utils_js_1.decoder.decode((0, base64url_js_1.decode)(protectedB64u)));
-        if (!(0, is_object_js_1.default)(result)) {
+        const result = JSON.parse(decoder.decode(base64url(protectedB64u)));
+        if (!isObject(result)) {
             throw new Error();
         }
         return result;

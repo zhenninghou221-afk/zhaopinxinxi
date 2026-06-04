@@ -1,9 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.isCryptoKey = void 0;
-const crypto = require("node:crypto");
-const util = require("node:util");
+import * as crypto from 'node:crypto';
+import * as util from 'node:util';
 const webcrypto = crypto.webcrypto;
-exports.default = webcrypto;
-const isCryptoKey = (key) => util.types.isCryptoKey(key);
-exports.isCryptoKey = isCryptoKey;
+export default webcrypto;
+export const isCryptoKey = (key) => util.types.isCryptoKey(key);

@@ -1,8 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = hmacDigest;
-const errors_js_1 = require("../util/errors.js");
-function hmacDigest(alg) {
+import { JOSENotSupported } from '../util/errors.js';
+export default function hmacDigest(alg) {
     switch (alg) {
         case 'HS256':
             return 'sha256';
@@ -11,6 +8,6 @@ function hmacDigest(alg) {
         case 'HS512':
             return 'sha512';
         default:
-            throw new errors_js_1.JOSENotSupported(`alg ${alg} is not supported either by JOSE or your javascript runtime`);
+            throw new JOSENotSupported(`alg ${alg} is not supported either by JOSE or your javascript runtime`);
     }
 }

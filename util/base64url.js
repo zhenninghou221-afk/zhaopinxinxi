@@ -1,6 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.decode = exports.encode = void 0;
-const base64url = require("../runtime/base64url.js");
-exports.encode = base64url.encode;
-exports.decode = base64url.decode;
+import * as base64url from '../runtime/base64url.js';
+export const encode = base64url.encode;
+export const decode = base64url.decode;

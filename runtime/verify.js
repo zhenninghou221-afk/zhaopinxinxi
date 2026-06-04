@@ -1,16 +1,14 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const crypto = require("node:crypto");
-const node_util_1 = require("node:util");
-const dsa_digest_js_1 = require("./dsa_digest.js");
-const node_key_js_1 = require("./node_key.js");
-const sign_js_1 = require("./sign.js");
-const get_sign_verify_key_js_1 = require("./get_sign_verify_key.js");
-const oneShotVerify = (0, node_util_1.promisify)(crypto.verify);
+import * as crypto from 'node:crypto';
+import { promisify } from 'node:util';
+import nodeDigest from './dsa_digest.js';
+import nodeKey from './node_key.js';
+import sign from './sign.js';
+import getVerifyKey from './get_sign_verify_key.js';
+const oneShotVerify = promisify(crypto.verify);
 const verify = async (alg, key, signature, data) => {
-    const k = (0, get_sign_verify_key_js_1.default)(alg, key, 'verify');
+    const k = getVerifyKey(alg, key, 'verify');
     if (alg.startsWith('HS')) {
-        const expected = await (0, sign_js_1.default)(alg, k, data);
+        const expected = await sign(alg, k, data);
         const actual = signature;
         try {
             return crypto.timingSafeEqual(actual, expected);
@@ -19,8 +17,8 @@ const verify = async (alg, key, signature, data) => {
             return false;
         }
     }
-    const algorithm = (0, dsa_digest_js_1.default)(alg);
-    const keyInput = (0, node_key_js_1.default)(alg, k);
+    const algorithm = nodeDigest(alg);
+    const keyInput = nodeKey(alg, k);
     try {
         return await oneShotVerify(algorithm, data, keyInput, signature);
     }
@@ -28,4 +26,4 @@ const verify = async (alg, key, signature, data) => {
         return false;
     }
 };
-exports.default = verify;
+export default verify;

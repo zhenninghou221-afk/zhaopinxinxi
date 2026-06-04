@@ -1,8 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.GeneralSign = void 0;
-const sign_js_1 = require("../flattened/sign.js");
-const errors_js_1 = require("../../util/errors.js");
+import { FlattenedSign } from '../flattened/sign.js';
+import { JWSInvalid } from '../../util/errors.js';
 class IndividualSignature {
     parent;
     protectedHeader;
@@ -38,7 +35,7 @@ class IndividualSignature {
         return this.parent;
     }
 }
-class GeneralSign {
+export class GeneralSign {
     _payload;
     _signatures = [];
     constructor(payload) {
@@ -51,7 +48,7 @@ class GeneralSign {
     }
     async sign() {
         if (!this._signatures.length) {
-            throw new errors_js_1.JWSInvalid('at least one signature must be added');
+            throw new JWSInvalid('at least one signature must be added');
         }
         const jws = {
             signatures: [],
@@ -59,7 +56,7 @@ class GeneralSign {
         };
         for (let i = 0; i < this._signatures.length; i++) {
             const signature = this._signatures[i];
-            const flattened = new sign_js_1.FlattenedSign(this._payload);
+            const flattened = new FlattenedSign(this._payload);
             flattened.setProtectedHeader(signature.protectedHeader);
             flattened.setUnprotectedHeader(signature.unprotectedHeader);
             const { payload, ...rest } = await flattened.sign(signature.key, signature.options);
@@ -67,11 +64,10 @@ class GeneralSign {
                 jws.payload = payload;
             }
             else if (jws.payload !== payload) {
-                throw new errors_js_1.JWSInvalid('inconsistent use of JWS Unencoded Payload (RFC7797)');
+                throw new JWSInvalid('inconsistent use of JWS Unencoded Payload (RFC7797)');
             }
             jws.signatures.push(rest);
         }
         return jws;
     }
 }
-exports.GeneralSign = GeneralSign;

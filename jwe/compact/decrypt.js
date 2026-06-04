@@ -1,21 +1,18 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.compactDecrypt = compactDecrypt;
-const decrypt_js_1 = require("../flattened/decrypt.js");
-const errors_js_1 = require("../../util/errors.js");
-const buffer_utils_js_1 = require("../../lib/buffer_utils.js");
-async function compactDecrypt(jwe, key, options) {
+import { flattenedDecrypt } from '../flattened/decrypt.js';
+import { JWEInvalid } from '../../util/errors.js';
+import { decoder } from '../../lib/buffer_utils.js';
+export async function compactDecrypt(jwe, key, options) {
     if (jwe instanceof Uint8Array) {
-        jwe = buffer_utils_js_1.decoder.decode(jwe);
+        jwe = decoder.decode(jwe);
     }
     if (typeof jwe !== 'string') {
-        throw new errors_js_1.JWEInvalid('Compact JWE must be a string or Uint8Array');
+        throw new JWEInvalid('Compact JWE must be a string or Uint8Array');
     }
     const { 0: protectedHeader, 1: encryptedKey, 2: iv, 3: ciphertext, 4: tag, length, } = jwe.split('.');
     if (length !== 5) {
-        throw new errors_js_1.JWEInvalid('Invalid Compact JWE');
+        throw new JWEInvalid('Invalid Compact JWE');
     }
-    const decrypted = await (0, decrypt_js_1.flattenedDecrypt)({
+    const decrypted = await flattenedDecrypt({
         ciphertext,
         iv: iv || undefined,
         protected: protectedHeader,

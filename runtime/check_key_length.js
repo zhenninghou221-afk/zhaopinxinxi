@@ -1,10 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const node_crypto_1 = require("node:crypto");
-exports.default = (key, alg) => {
+import { KeyObject } from 'node:crypto';
+export default (key, alg) => {
     let modulusLength;
     try {
-        if (key instanceof node_crypto_1.KeyObject) {
+        if (key instanceof KeyObject) {
             modulusLength = key.asymmetricKeyDetails?.modulusLength;
         }
         else {
