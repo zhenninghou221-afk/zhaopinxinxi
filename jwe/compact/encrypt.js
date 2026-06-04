@@ -1,7 +1,11 @@
-import { FlattenedEncrypt } from '../flattened/encrypt.js';
-export class CompactEncrypt {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CompactEncrypt = void 0;
+const encrypt_js_1 = require("../flattened/encrypt.js");
+class CompactEncrypt {
+    _flattened;
     constructor(plaintext) {
-        this._flattened = new FlattenedEncrypt(plaintext);
+        this._flattened = new encrypt_js_1.FlattenedEncrypt(plaintext);
     }
     setContentEncryptionKey(cek) {
         this._flattened.setContentEncryptionKey(cek);
@@ -24,3 +28,4 @@ export class CompactEncrypt {
         return [jwe.protected, jwe.encrypted_key, jwe.iv, jwe.ciphertext, jwe.tag].join('.');
     }
 }
+exports.CompactEncrypt = CompactEncrypt;

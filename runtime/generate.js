@@ -1,30 +1,26 @@
-import crypto from './webcrypto.js';
-import { JOSENotSupported } from '../util/errors.js';
-import random from './random.js';
-export async function generateSecret(alg, options) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.generateSecret = generateSecret;
+exports.generateKeyPair = generateKeyPair;
+const node_crypto_1 = require("node:crypto");
+const node_util_1 = require("node:util");
+const random_js_1 = require("./random.js");
+const errors_js_1 = require("../util/errors.js");
+const generate = (0, node_util_1.promisify)(node_crypto_1.generateKeyPair);
+async function generateSecret(alg, options) {
     let length;
-    let algorithm;
-    let keyUsages;
     switch (alg) {
         case 'HS256':
         case 'HS384':
         case 'HS512':
-            length = parseInt(alg.slice(-3), 10);
-            algorithm = { name: 'HMAC', hash: `SHA-${length}`, length };
-            keyUsages = ['sign', 'verify'];
-            break;
         case 'A128CBC-HS256':
         case 'A192CBC-HS384':
         case 'A256CBC-HS512':
             length = parseInt(alg.slice(-3), 10);
-            return random(new Uint8Array(length >> 3));
+            break;
         case 'A128KW':
         case 'A192KW':
         case 'A256KW':
-            length = parseInt(alg.slice(1, 4), 10);
-            algorithm = { name: 'AES-KW', length };
-            keyUsages = ['wrapKey', 'unwrapKey'];
-            break;
         case 'A128GCMKW':
         case 'A192GCMKW':
         case 'A256GCMKW':
@@ -32,112 +28,76 @@ export async function generateSecret(alg, options) {
         case 'A192GCM':
         case 'A256GCM':
             length = parseInt(alg.slice(1, 4), 10);
-            algorithm = { name: 'AES-GCM', length };
-            keyUsages = ['encrypt', 'decrypt'];
             break;
         default:
-            throw new JOSENotSupported('Invalid or unsupported JWK "alg" (Algorithm) Parameter value');
+            throw new errors_js_1.JOSENotSupported('Invalid or unsupported JWK "alg" (Algorithm) Parameter value');
     }
-    return crypto.subtle.generateKey(algorithm, options?.extractable ?? false, keyUsages);
+    return (0, node_crypto_1.createSecretKey)((0, random_js_1.default)(new Uint8Array(length >> 3)));
 }
-function getModulusLengthOption(options) {
-    const modulusLength = options?.modulusLength ?? 2048;
-    if (typeof modulusLength !== 'number' || modulusLength < 2048) {
-        throw new JOSENotSupported('Invalid or unsupported modulusLength option provided, 2048 bits or larger keys must be used');
-    }
-    return modulusLength;
-}
-export async function generateKeyPair(alg, options) {
-    let algorithm;
-    let keyUsages;
+async function generateKeyPair(alg, options) {
     switch (alg) {
-        case 'PS256':
-        case 'PS384':
-        case 'PS512':
-            algorithm = {
-                name: 'RSA-PSS',
-                hash: `SHA-${alg.slice(-3)}`,
-                publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
-                modulusLength: getModulusLengthOption(options),
-            };
-            keyUsages = ['sign', 'verify'];
-            break;
         case 'RS256':
         case 'RS384':
         case 'RS512':
-            algorithm = {
-                name: 'RSASSA-PKCS1-v1_5',
-                hash: `SHA-${alg.slice(-3)}`,
-                publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
-                modulusLength: getModulusLengthOption(options),
-            };
-            keyUsages = ['sign', 'verify'];
-            break;
+        case 'PS256':
+        case 'PS384':
+        case 'PS512':
         case 'RSA-OAEP':
         case 'RSA-OAEP-256':
         case 'RSA-OAEP-384':
         case 'RSA-OAEP-512':
-            algorithm = {
-                name: 'RSA-OAEP',
-                hash: `SHA-${parseInt(alg.slice(-3), 10) || 1}`,
-                publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
-                modulusLength: getModulusLengthOption(options),
-            };
-            keyUsages = ['decrypt', 'unwrapKey', 'encrypt', 'wrapKey'];
-            break;
-        case 'ES256':
-            algorithm = { name: 'ECDSA', namedCurve: 'P-256' };
-            keyUsages = ['sign', 'verify'];
-            break;
-        case 'ES384':
-            algorithm = { name: 'ECDSA', namedCurve: 'P-384' };
-            keyUsages = ['sign', 'verify'];
-            break;
-        case 'ES512':
-            algorithm = { name: 'ECDSA', namedCurve: 'P-521' };
-            keyUsages = ['sign', 'verify'];
-            break;
-        case 'Ed25519':
-            algorithm = { name: 'Ed25519' };
-            keyUsages = ['sign', 'verify'];
-            break;
-        case 'EdDSA': {
-            keyUsages = ['sign', 'verify'];
-            const crv = options?.crv ?? 'Ed25519';
-            switch (crv) {
-                case 'Ed25519':
-                case 'Ed448':
-                    algorithm = { name: crv };
-                    break;
-                default:
-                    throw new JOSENotSupported('Invalid or unsupported crv option provided');
+        case 'RSA1_5': {
+            const modulusLength = options?.modulusLength ?? 2048;
+            if (typeof modulusLength !== 'number' || modulusLength < 2048) {
+                throw new errors_js_1.JOSENotSupported('Invalid or unsupported modulusLength option provided, 2048 bits or larger keys must be used');
             }
-            break;
+            const keypair = await generate('rsa', {
+                modulusLength,
+                publicExponent: 0x10001,
+            });
+            return keypair;
+        }
+        case 'ES256':
+            return generate('ec', { namedCurve: 'P-256' });
+        case 'ES256K':
+            return generate('ec', { namedCurve: 'secp256k1' });
+        case 'ES384':
+            return generate('ec', { namedCurve: 'P-384' });
+        case 'ES512':
+            return generate('ec', { namedCurve: 'P-521' });
+        case 'Ed25519':
+            return generate('ed25519');
+        case 'EdDSA': {
+            switch (options?.crv) {
+                case undefined:
+                case 'Ed25519':
+                    return generate('ed25519');
+                case 'Ed448':
+                    return generate('ed448');
+                default:
+                    throw new errors_js_1.JOSENotSupported('Invalid or unsupported crv option provided, supported values are Ed25519 and Ed448');
+            }
         }
         case 'ECDH-ES':
         case 'ECDH-ES+A128KW':
         case 'ECDH-ES+A192KW':
         case 'ECDH-ES+A256KW': {
-            keyUsages = ['deriveKey', 'deriveBits'];
             const crv = options?.crv ?? 'P-256';
             switch (crv) {
+                case undefined:
                 case 'P-256':
                 case 'P-384':
-                case 'P-521': {
-                    algorithm = { name: 'ECDH', namedCurve: crv };
-                    break;
-                }
+                case 'P-521':
+                    return generate('ec', { namedCurve: crv });
                 case 'X25519':
+                    return generate('x25519');
                 case 'X448':
-                    algorithm = { name: crv };
-                    break;
+                    return generate('x448');
                 default:
-                    throw new JOSENotSupported('Invalid or unsupported crv option provided, supported values are P-256, P-384, P-521, X25519, and X448');
+                    throw new errors_js_1.JOSENotSupported('Invalid or unsupported crv option provided, supported values are P-256, P-384, P-521, X25519, and X448');
             }
-            break;
         }
         default:
-            throw new JOSENotSupported('Invalid or unsupported JWK "alg" (Algorithm) Parameter value');
+            throw new errors_js_1.JOSENotSupported('Invalid or unsupported JWK "alg" (Algorithm) Parameter value');
     }
-    return crypto.subtle.generateKey(algorithm, options?.extractable ?? false, keyUsages);
 }

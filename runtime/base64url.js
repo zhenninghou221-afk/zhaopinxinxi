@@ -1,37 +1,20 @@
-import { encoder, decoder } from '../lib/buffer_utils.js';
-export const encodeBase64 = (input) => {
-    let unencoded = input;
-    if (typeof unencoded === 'string') {
-        unencoded = encoder.encode(unencoded);
-    }
-    const CHUNK_SIZE = 0x8000;
-    const arr = [];
-    for (let i = 0; i < unencoded.length; i += CHUNK_SIZE) {
-        arr.push(String.fromCharCode.apply(null, unencoded.subarray(i, i + CHUNK_SIZE)));
-    }
-    return btoa(arr.join(''));
-};
-export const encode = (input) => {
-    return encodeBase64(input).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
-};
-export const decodeBase64 = (encoded) => {
-    const binary = atob(encoded);
-    const bytes = new Uint8Array(binary.length);
-    for (let i = 0; i < binary.length; i++) {
-        bytes[i] = binary.charCodeAt(i);
-    }
-    return bytes;
-};
-export const decode = (input) => {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.decode = exports.encode = exports.encodeBase64 = exports.decodeBase64 = void 0;
+const node_buffer_1 = require("node:buffer");
+const buffer_utils_js_1 = require("../lib/buffer_utils.js");
+function normalize(input) {
     let encoded = input;
     if (encoded instanceof Uint8Array) {
-        encoded = decoder.decode(encoded);
+        encoded = buffer_utils_js_1.decoder.decode(encoded);
     }
-    encoded = encoded.replace(/-/g, '+').replace(/_/g, '/').replace(/\s/g, '');
-    try {
-        return decodeBase64(encoded);
-    }
-    catch {
-        throw new TypeError('The input to be decoded is not correctly encoded.');
-    }
-};
+    return encoded;
+}
+const encode = (input) => node_buffer_1.Buffer.from(input).toString('base64url');
+exports.encode = encode;
+const decodeBase64 = (input) => new Uint8Array(node_buffer_1.Buffer.from(input, 'base64'));
+exports.decodeBase64 = decodeBase64;
+const encodeBase64 = (input) => node_buffer_1.Buffer.from(input).toString('base64');
+exports.encodeBase64 = encodeBase64;
+const decode = (input) => new Uint8Array(node_buffer_1.Buffer.from(normalize(input), 'base64url'));
+exports.decode = decode;

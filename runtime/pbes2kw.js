@@ -1,51 +1,48 @@
-import random from './random.js';
-import { p2s as concatSalt } from '../lib/buffer_utils.js';
-import { encode as base64url } from './base64url.js';
-import { wrap, unwrap } from './aeskw.js';
-import checkP2s from '../lib/check_p2s.js';
-import crypto, { isCryptoKey } from './webcrypto.js';
-import { checkEncCryptoKey } from '../lib/crypto_key.js';
-import invalidKeyInput from '../lib/invalid_key_input.js';
-import { types } from './is_key_like.js';
-function getCryptoKey(key, alg) {
-    if (key instanceof Uint8Array) {
-        return crypto.subtle.importKey('raw', key, 'PBKDF2', false, ['deriveBits']);
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.decrypt = exports.encrypt = void 0;
+const node_util_1 = require("node:util");
+const node_crypto_1 = require("node:crypto");
+const random_js_1 = require("./random.js");
+const buffer_utils_js_1 = require("../lib/buffer_utils.js");
+const base64url_js_1 = require("./base64url.js");
+const aeskw_js_1 = require("./aeskw.js");
+const check_p2s_js_1 = require("../lib/check_p2s.js");
+const webcrypto_js_1 = require("./webcrypto.js");
+const crypto_key_js_1 = require("../lib/crypto_key.js");
+const is_key_object_js_1 = require("./is_key_object.js");
+const invalid_key_input_js_1 = require("../lib/invalid_key_input.js");
+const is_key_like_js_1 = require("./is_key_like.js");
+const pbkdf2 = (0, node_util_1.promisify)(node_crypto_1.pbkdf2);
+function getPassword(key, alg) {
+    if ((0, is_key_object_js_1.default)(key)) {
+        return key.export();
     }
-    if (isCryptoKey(key)) {
-        checkEncCryptoKey(key, alg, 'deriveBits', 'deriveKey');
+    if (key instanceof Uint8Array) {
         return key;
     }
-    throw new TypeError(invalidKeyInput(key, ...types, 'Uint8Array'));
-}
-async function deriveKey(p2s, alg, p2c, key) {
-    checkP2s(p2s);
-    const salt = concatSalt(alg, p2s);
-    const keylen = parseInt(alg.slice(13, 16), 10);
-    const subtleAlg = {
-        hash: `SHA-${alg.slice(8, 11)}`,
-        iterations: p2c,
-        name: 'PBKDF2',
-        salt,
-    };
-    const wrapAlg = {
-        length: keylen,
-        name: 'AES-KW',
-    };
-    const cryptoKey = await getCryptoKey(key, alg);
-    if (cryptoKey.usages.includes('deriveBits')) {
-        return new Uint8Array(await crypto.subtle.deriveBits(subtleAlg, cryptoKey, keylen));
+    if ((0, webcrypto_js_1.isCryptoKey)(key)) {
+        (0, crypto_key_js_1.checkEncCryptoKey)(key, alg, 'deriveBits', 'deriveKey');
+        return node_crypto_1.KeyObject.from(key).export();
     }
-    if (cryptoKey.usages.includes('deriveKey')) {
-        return crypto.subtle.deriveKey(subtleAlg, cryptoKey, wrapAlg, false, ['wrapKey', 'unwrapKey']);
-    }
-    throw new TypeError('PBKDF2 key "usages" must include "deriveBits" or "deriveKey"');
+    throw new TypeError((0, invalid_key_input_js_1.default)(key, ...is_key_like_js_1.types, 'Uint8Array'));
 }
-export const encrypt = async (alg, key, cek, p2c = 2048, p2s = random(new Uint8Array(16))) => {
-    const derived = await deriveKey(p2s, alg, p2c, key);
-    const encryptedKey = await wrap(alg.slice(-6), derived, cek);
-    return { encryptedKey, p2c, p2s: base64url(p2s) };
+const encrypt = async (alg, key, cek, p2c = 2048, p2s = (0, random_js_1.default)(new Uint8Array(16))) => {
+    (0, check_p2s_js_1.default)(p2s);
+    const salt = (0, buffer_utils_js_1.p2s)(alg, p2s);
+    const keylen = parseInt(alg.slice(13, 16), 10) >> 3;
+    const password = getPassword(key, alg);
+    const derivedKey = await pbkdf2(password, salt, p2c, keylen, `sha${alg.slice(8, 11)}`);
+    const encryptedKey = await (0, aeskw_js_1.wrap)(alg.slice(-6), derivedKey, cek);
+    return { encryptedKey, p2c, p2s: (0, base64url_js_1.encode)(p2s) };
 };
-export const decrypt = async (alg, key, encryptedKey, p2c, p2s) => {
-    const derived = await deriveKey(p2s, alg, p2c, key);
-    return unwrap(alg.slice(-6), derived, encryptedKey);
+exports.encrypt = encrypt;
+const decrypt = async (alg, key, encryptedKey, p2c, p2s) => {
+    (0, check_p2s_js_1.default)(p2s);
+    const salt = (0, buffer_utils_js_1.p2s)(alg, p2s);
+    const keylen = parseInt(alg.slice(13, 16), 10) >> 3;
+    const password = getPassword(key, alg);
+    const derivedKey = await pbkdf2(password, salt, p2c, keylen, `sha${alg.slice(8, 11)}`);
+    return (0, aeskw_js_1.unwrap)(alg.slice(-6), derivedKey, encryptedKey);
 };
+exports.decrypt = decrypt;

@@ -1,7 +1,11 @@
-import fetchJwks from '../runtime/fetch_jwks.js';
-import { JWKSNoMatchingKey } from '../util/errors.js';
-import { createLocalJWKSet } from './local.js';
-import isObject from '../lib/is_object.js';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.experimental_jwksCache = exports.jwksCache = void 0;
+exports.createRemoteJWKSet = createRemoteJWKSet;
+const fetch_jwks_js_1 = require("../runtime/fetch_jwks.js");
+const errors_js_1 = require("../util/errors.js");
+const local_js_1 = require("./local.js");
+const is_object_js_1 = require("../lib/is_object.js");
 function isCloudflareWorkers() {
     return (typeof WebSocketPair !== 'undefined' ||
         (typeof navigator !== 'undefined' && navigator.userAgent === 'Cloudflare-Workers') ||
@@ -13,7 +17,7 @@ if (typeof navigator === 'undefined' || !navigator.userAgent?.startsWith?.('Mozi
     const VERSION = 'v5.10.0';
     USER_AGENT = `${NAME}/${VERSION}`;
 }
-export const jwksCache = Symbol();
+exports.jwksCache = Symbol();
 function isFreshJwksCache(input, cacheMaxAge) {
     if (typeof input !== 'object' || input === null) {
         return false;
@@ -22,14 +26,23 @@ function isFreshJwksCache(input, cacheMaxAge) {
         return false;
     }
     if (!('jwks' in input) ||
-        !isObject(input.jwks) ||
+        !(0, is_object_js_1.default)(input.jwks) ||
         !Array.isArray(input.jwks.keys) ||
-        !Array.prototype.every.call(input.jwks.keys, isObject)) {
+        !Array.prototype.every.call(input.jwks.keys, is_object_js_1.default)) {
         return false;
     }
     return true;
 }
 class RemoteJWKSet {
+    _url;
+    _timeoutDuration;
+    _cooldownDuration;
+    _cacheMaxAge;
+    _jwksTimestamp;
+    _pendingFetch;
+    _options;
+    _local;
+    _cache;
     constructor(url, options) {
         if (!(url instanceof URL)) {
             throw new TypeError('url must be an instance of URL');
@@ -41,11 +54,11 @@ class RemoteJWKSet {
         this._cooldownDuration =
             typeof options?.cooldownDuration === 'number' ? options?.cooldownDuration : 30000;
         this._cacheMaxAge = typeof options?.cacheMaxAge === 'number' ? options?.cacheMaxAge : 600000;
-        if (options?.[jwksCache] !== undefined) {
-            this._cache = options?.[jwksCache];
-            if (isFreshJwksCache(options?.[jwksCache], this._cacheMaxAge)) {
+        if (options?.[exports.jwksCache] !== undefined) {
+            this._cache = options?.[exports.jwksCache];
+            if (isFreshJwksCache(options?.[exports.jwksCache], this._cacheMaxAge)) {
                 this._jwksTimestamp = this._cache.uat;
-                this._local = createLocalJWKSet(this._cache.jwks);
+                this._local = (0, local_js_1.createLocalJWKSet)(this._cache.jwks);
             }
         }
     }
@@ -67,7 +80,7 @@ class RemoteJWKSet {
             return await this._local(protectedHeader, token);
         }
         catch (err) {
-            if (err instanceof JWKSNoMatchingKey) {
+            if (err instanceof errors_js_1.JWKSNoMatchingKey) {
                 if (this.coolingDown() === false) {
                     await this.reload();
                     return this._local(protectedHeader, token);
@@ -85,9 +98,9 @@ class RemoteJWKSet {
             headers.set('User-Agent', USER_AGENT);
             this._options.headers = Object.fromEntries(headers.entries());
         }
-        this._pendingFetch || (this._pendingFetch = fetchJwks(this._url, this._timeoutDuration, this._options)
+        this._pendingFetch ||= (0, fetch_jwks_js_1.default)(this._url, this._timeoutDuration, this._options)
             .then((json) => {
-            this._local = createLocalJWKSet(json);
+            this._local = (0, local_js_1.createLocalJWKSet)(json);
             if (this._cache) {
                 this._cache.uat = Date.now();
                 this._cache.jwks = json;
@@ -98,11 +111,11 @@ class RemoteJWKSet {
             .catch((err) => {
             this._pendingFetch = undefined;
             throw err;
-        }));
+        });
         await this._pendingFetch;
     }
 }
-export function createRemoteJWKSet(url, options) {
+function createRemoteJWKSet(url, options) {
     const set = new RemoteJWKSet(url, options);
     const remoteJWKSet = async (protectedHeader, token) => set.getKey(protectedHeader, token);
     Object.defineProperties(remoteJWKSet, {
@@ -136,4 +149,4 @@ export function createRemoteJWKSet(url, options) {
     });
     return remoteJWKSet;
 }
-export const experimental_jwksCache = jwksCache;
+exports.experimental_jwksCache = exports.jwksCache;

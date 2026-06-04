@@ -1,7 +1,11 @@
-import { FlattenedSign } from '../flattened/sign.js';
-export class CompactSign {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CompactSign = void 0;
+const sign_js_1 = require("../flattened/sign.js");
+class CompactSign {
+    _flattened;
     constructor(payload) {
-        this._flattened = new FlattenedSign(payload);
+        this._flattened = new sign_js_1.FlattenedSign(payload);
     }
     setProtectedHeader(protectedHeader) {
         this._flattened.setProtectedHeader(protectedHeader);
@@ -15,3 +19,4 @@ export class CompactSign {
         return `${jws.protected}.${jws.payload}.${jws.signature}`;
     }
 }
+exports.CompactSign = CompactSign;

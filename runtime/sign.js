@@ -1,11 +1,19 @@
-import subtleAlgorithm from './subtle_dsa.js';
-import crypto from './webcrypto.js';
-import checkKeyLength from './check_key_length.js';
-import getSignKey from './get_sign_verify_key.js';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const crypto = require("node:crypto");
+const node_util_1 = require("node:util");
+const dsa_digest_js_1 = require("./dsa_digest.js");
+const hmac_digest_js_1 = require("./hmac_digest.js");
+const node_key_js_1 = require("./node_key.js");
+const get_sign_verify_key_js_1 = require("./get_sign_verify_key.js");
+const oneShotSign = (0, node_util_1.promisify)(crypto.sign);
 const sign = async (alg, key, data) => {
-    const cryptoKey = await getSignKey(alg, key, 'sign');
-    checkKeyLength(alg, cryptoKey);
-    const signature = await crypto.subtle.sign(subtleAlgorithm(alg, cryptoKey.algorithm), cryptoKey, data);
-    return new Uint8Array(signature);
+    const k = (0, get_sign_verify_key_js_1.default)(alg, key, 'sign');
+    if (alg.startsWith('HS')) {
+        const hmac = crypto.createHmac((0, hmac_digest_js_1.default)(alg), k);
+        hmac.update(data);
+        return hmac.digest();
+    }
+    return oneShotSign((0, dsa_digest_js_1.default)(alg), data, (0, node_key_js_1.default)(alg, k));
 };
-export default sign;
+exports.default = sign;

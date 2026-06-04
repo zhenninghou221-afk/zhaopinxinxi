@@ -1,90 +1,93 @@
-import { decode as base64url } from '../../runtime/base64url.js';
-import decrypt from '../../runtime/decrypt.js';
-import { JOSEAlgNotAllowed, JOSENotSupported, JWEInvalid } from '../../util/errors.js';
-import isDisjoint from '../../lib/is_disjoint.js';
-import isObject from '../../lib/is_object.js';
-import decryptKeyManagement from '../../lib/decrypt_key_management.js';
-import { encoder, decoder, concat } from '../../lib/buffer_utils.js';
-import generateCek from '../../lib/cek.js';
-import validateCrit from '../../lib/validate_crit.js';
-import validateAlgorithms from '../../lib/validate_algorithms.js';
-export async function flattenedDecrypt(jwe, key, options) {
-    if (!isObject(jwe)) {
-        throw new JWEInvalid('Flattened JWE must be an object');
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.flattenedDecrypt = flattenedDecrypt;
+const base64url_js_1 = require("../../runtime/base64url.js");
+const decrypt_js_1 = require("../../runtime/decrypt.js");
+const errors_js_1 = require("../../util/errors.js");
+const is_disjoint_js_1 = require("../../lib/is_disjoint.js");
+const is_object_js_1 = require("../../lib/is_object.js");
+const decrypt_key_management_js_1 = require("../../lib/decrypt_key_management.js");
+const buffer_utils_js_1 = require("../../lib/buffer_utils.js");
+const cek_js_1 = require("../../lib/cek.js");
+const validate_crit_js_1 = require("../../lib/validate_crit.js");
+const validate_algorithms_js_1 = require("../../lib/validate_algorithms.js");
+async function flattenedDecrypt(jwe, key, options) {
+    if (!(0, is_object_js_1.default)(jwe)) {
+        throw new errors_js_1.JWEInvalid('Flattened JWE must be an object');
     }
     if (jwe.protected === undefined && jwe.header === undefined && jwe.unprotected === undefined) {
-        throw new JWEInvalid('JOSE Header missing');
+        throw new errors_js_1.JWEInvalid('JOSE Header missing');
     }
     if (jwe.iv !== undefined && typeof jwe.iv !== 'string') {
-        throw new JWEInvalid('JWE Initialization Vector incorrect type');
+        throw new errors_js_1.JWEInvalid('JWE Initialization Vector incorrect type');
     }
     if (typeof jwe.ciphertext !== 'string') {
-        throw new JWEInvalid('JWE Ciphertext missing or incorrect type');
+        throw new errors_js_1.JWEInvalid('JWE Ciphertext missing or incorrect type');
     }
     if (jwe.tag !== undefined && typeof jwe.tag !== 'string') {
-        throw new JWEInvalid('JWE Authentication Tag incorrect type');
+        throw new errors_js_1.JWEInvalid('JWE Authentication Tag incorrect type');
     }
     if (jwe.protected !== undefined && typeof jwe.protected !== 'string') {
-        throw new JWEInvalid('JWE Protected Header incorrect type');
+        throw new errors_js_1.JWEInvalid('JWE Protected Header incorrect type');
     }
     if (jwe.encrypted_key !== undefined && typeof jwe.encrypted_key !== 'string') {
-        throw new JWEInvalid('JWE Encrypted Key incorrect type');
+        throw new errors_js_1.JWEInvalid('JWE Encrypted Key incorrect type');
     }
     if (jwe.aad !== undefined && typeof jwe.aad !== 'string') {
-        throw new JWEInvalid('JWE AAD incorrect type');
+        throw new errors_js_1.JWEInvalid('JWE AAD incorrect type');
     }
-    if (jwe.header !== undefined && !isObject(jwe.header)) {
-        throw new JWEInvalid('JWE Shared Unprotected Header incorrect type');
+    if (jwe.header !== undefined && !(0, is_object_js_1.default)(jwe.header)) {
+        throw new errors_js_1.JWEInvalid('JWE Shared Unprotected Header incorrect type');
     }
-    if (jwe.unprotected !== undefined && !isObject(jwe.unprotected)) {
-        throw new JWEInvalid('JWE Per-Recipient Unprotected Header incorrect type');
+    if (jwe.unprotected !== undefined && !(0, is_object_js_1.default)(jwe.unprotected)) {
+        throw new errors_js_1.JWEInvalid('JWE Per-Recipient Unprotected Header incorrect type');
     }
     let parsedProt;
     if (jwe.protected) {
         try {
-            const protectedHeader = base64url(jwe.protected);
-            parsedProt = JSON.parse(decoder.decode(protectedHeader));
+            const protectedHeader = (0, base64url_js_1.decode)(jwe.protected);
+            parsedProt = JSON.parse(buffer_utils_js_1.decoder.decode(protectedHeader));
         }
         catch {
-            throw new JWEInvalid('JWE Protected Header is invalid');
+            throw new errors_js_1.JWEInvalid('JWE Protected Header is invalid');
         }
     }
-    if (!isDisjoint(parsedProt, jwe.header, jwe.unprotected)) {
-        throw new JWEInvalid('JWE Protected, JWE Unprotected Header, and JWE Per-Recipient Unprotected Header Parameter names must be disjoint');
+    if (!(0, is_disjoint_js_1.default)(parsedProt, jwe.header, jwe.unprotected)) {
+        throw new errors_js_1.JWEInvalid('JWE Protected, JWE Unprotected Header, and JWE Per-Recipient Unprotected Header Parameter names must be disjoint');
     }
     const joseHeader = {
         ...parsedProt,
         ...jwe.header,
         ...jwe.unprotected,
     };
-    validateCrit(JWEInvalid, new Map(), options?.crit, parsedProt, joseHeader);
+    (0, validate_crit_js_1.default)(errors_js_1.JWEInvalid, new Map(), options?.crit, parsedProt, joseHeader);
     if (joseHeader.zip !== undefined) {
-        throw new JOSENotSupported('JWE "zip" (Compression Algorithm) Header Parameter is not supported.');
+        throw new errors_js_1.JOSENotSupported('JWE "zip" (Compression Algorithm) Header Parameter is not supported.');
     }
     const { alg, enc } = joseHeader;
     if (typeof alg !== 'string' || !alg) {
-        throw new JWEInvalid('missing JWE Algorithm (alg) in JWE Header');
+        throw new errors_js_1.JWEInvalid('missing JWE Algorithm (alg) in JWE Header');
     }
     if (typeof enc !== 'string' || !enc) {
-        throw new JWEInvalid('missing JWE Encryption Algorithm (enc) in JWE Header');
+        throw new errors_js_1.JWEInvalid('missing JWE Encryption Algorithm (enc) in JWE Header');
     }
-    const keyManagementAlgorithms = options && validateAlgorithms('keyManagementAlgorithms', options.keyManagementAlgorithms);
+    const keyManagementAlgorithms = options && (0, validate_algorithms_js_1.default)('keyManagementAlgorithms', options.keyManagementAlgorithms);
     const contentEncryptionAlgorithms = options &&
-        validateAlgorithms('contentEncryptionAlgorithms', options.contentEncryptionAlgorithms);
+        (0, validate_algorithms_js_1.default)('contentEncryptionAlgorithms', options.contentEncryptionAlgorithms);
     if ((keyManagementAlgorithms && !keyManagementAlgorithms.has(alg)) ||
         (!keyManagementAlgorithms && alg.startsWith('PBES2'))) {
-        throw new JOSEAlgNotAllowed('"alg" (Algorithm) Header Parameter value not allowed');
+        throw new errors_js_1.JOSEAlgNotAllowed('"alg" (Algorithm) Header Parameter value not allowed');
     }
     if (contentEncryptionAlgorithms && !contentEncryptionAlgorithms.has(enc)) {
-        throw new JOSEAlgNotAllowed('"enc" (Encryption Algorithm) Header Parameter value not allowed');
+        throw new errors_js_1.JOSEAlgNotAllowed('"enc" (Encryption Algorithm) Header Parameter value not allowed');
     }
     let encryptedKey;
     if (jwe.encrypted_key !== undefined) {
         try {
-            encryptedKey = base64url(jwe.encrypted_key);
+            encryptedKey = (0, base64url_js_1.decode)(jwe.encrypted_key);
         }
         catch {
-            throw new JWEInvalid('Failed to base64url decode the encrypted_key');
+            throw new errors_js_1.JWEInvalid('Failed to base64url decode the encrypted_key');
         }
     }
     let resolvedKey = false;
@@ -94,58 +97,58 @@ export async function flattenedDecrypt(jwe, key, options) {
     }
     let cek;
     try {
-        cek = await decryptKeyManagement(alg, key, encryptedKey, joseHeader, options);
+        cek = await (0, decrypt_key_management_js_1.default)(alg, key, encryptedKey, joseHeader, options);
     }
     catch (err) {
-        if (err instanceof TypeError || err instanceof JWEInvalid || err instanceof JOSENotSupported) {
+        if (err instanceof TypeError || err instanceof errors_js_1.JWEInvalid || err instanceof errors_js_1.JOSENotSupported) {
             throw err;
         }
-        cek = generateCek(enc);
+        cek = (0, cek_js_1.default)(enc);
     }
     let iv;
     let tag;
     if (jwe.iv !== undefined) {
         try {
-            iv = base64url(jwe.iv);
+            iv = (0, base64url_js_1.decode)(jwe.iv);
         }
         catch {
-            throw new JWEInvalid('Failed to base64url decode the iv');
+            throw new errors_js_1.JWEInvalid('Failed to base64url decode the iv');
         }
     }
     if (jwe.tag !== undefined) {
         try {
-            tag = base64url(jwe.tag);
+            tag = (0, base64url_js_1.decode)(jwe.tag);
         }
         catch {
-            throw new JWEInvalid('Failed to base64url decode the tag');
+            throw new errors_js_1.JWEInvalid('Failed to base64url decode the tag');
         }
     }
-    const protectedHeader = encoder.encode(jwe.protected ?? '');
+    const protectedHeader = buffer_utils_js_1.encoder.encode(jwe.protected ?? '');
     let additionalData;
     if (jwe.aad !== undefined) {
-        additionalData = concat(protectedHeader, encoder.encode('.'), encoder.encode(jwe.aad));
+        additionalData = (0, buffer_utils_js_1.concat)(protectedHeader, buffer_utils_js_1.encoder.encode('.'), buffer_utils_js_1.encoder.encode(jwe.aad));
     }
     else {
         additionalData = protectedHeader;
     }
     let ciphertext;
     try {
-        ciphertext = base64url(jwe.ciphertext);
+        ciphertext = (0, base64url_js_1.decode)(jwe.ciphertext);
     }
     catch {
-        throw new JWEInvalid('Failed to base64url decode the ciphertext');
+        throw new errors_js_1.JWEInvalid('Failed to base64url decode the ciphertext');
     }
-    const plaintext = await decrypt(enc, cek, ciphertext, iv, tag, additionalData);
+    const plaintext = await (0, decrypt_js_1.default)(enc, cek, ciphertext, iv, tag, additionalData);
     const result = { plaintext };
     if (jwe.protected !== undefined) {
         result.protectedHeader = parsedProt;
     }
     if (jwe.aad !== undefined) {
         try {
-            result.additionalAuthenticatedData = base64url(jwe.aad);
+            result.additionalAuthenticatedData = (0, base64url_js_1.decode)(jwe.aad);
         }
         catch {
-            throw new JWEInvalid('Failed to base64url decode the aad');
+            throw new errors_js_1.JWEInvalid('Failed to base64url decode the aad');
         }
     }
     if (jwe.unprotected !== undefined) {

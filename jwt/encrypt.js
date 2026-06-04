@@ -1,7 +1,17 @@
-import { CompactEncrypt } from '../jwe/compact/encrypt.js';
-import { encoder } from '../lib/buffer_utils.js';
-import { ProduceJWT } from './produce.js';
-export class EncryptJWT extends ProduceJWT {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.EncryptJWT = void 0;
+const encrypt_js_1 = require("../jwe/compact/encrypt.js");
+const buffer_utils_js_1 = require("../lib/buffer_utils.js");
+const produce_js_1 = require("./produce.js");
+class EncryptJWT extends produce_js_1.ProduceJWT {
+    _cek;
+    _iv;
+    _keyManagementParameters;
+    _protectedHeader;
+    _replicateIssuerAsHeader;
+    _replicateSubjectAsHeader;
+    _replicateAudienceAsHeader;
     setProtectedHeader(protectedHeader) {
         if (this._protectedHeader) {
             throw new TypeError('setProtectedHeader can only be called once');
@@ -43,7 +53,7 @@ export class EncryptJWT extends ProduceJWT {
         return this;
     }
     async encrypt(key, options) {
-        const enc = new CompactEncrypt(encoder.encode(JSON.stringify(this._payload)));
+        const enc = new encrypt_js_1.CompactEncrypt(buffer_utils_js_1.encoder.encode(JSON.stringify(this._payload)));
         if (this._replicateIssuerAsHeader) {
             this._protectedHeader = { ...this._protectedHeader, iss: this._payload.iss };
         }
@@ -66,3 +76,4 @@ export class EncryptJWT extends ProduceJWT {
         return enc.encrypt(key, options);
     }
 }
+exports.EncryptJWT = EncryptJWT;
