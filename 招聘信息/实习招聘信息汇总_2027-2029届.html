@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2027-2029届毕业生实习招聘信息汇总 (2026暑期)</title>
+<style>
+  :root { --bg:#0f172a; --card-bg:#1e293b; --text:#e2e8f0; --text2:#94a3b8; --accent:#38bdf8; --accent2:#818cf8; --border:#334155; --tag-bg:#1e3a5f; --tag-text:#7dd3fc; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif; background:var(--bg); color:var(--text); line-height:1.5; }
+  .hero { background:linear-gradient(135deg,#1e3a5f 0%,#0f172a 50%,#1a1a3e 100%); padding:44px 20px; text-align:center; border-bottom:1px solid var(--border); }
+  .hero h1 { font-size:2em; background:linear-gradient(135deg,var(--accent),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:6px; }
+  .hero .subtitle { color:var(--text2); font-size:.95em; }
+  .hero .update { display:inline-block; margin-top:10px; background:var(--tag-bg); color:var(--tag-text); padding:5px 18px; border-radius:20px; font-size:.82em; }
+  .stats-row { display:flex; justify-content:center; gap:32px; margin-top:18px; flex-wrap:wrap; }
+  .stat-item { text-align:center; }
+  .stat-item .num { font-size:1.7em; font-weight:800; background:linear-gradient(135deg,#fbbf24,#f97316); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .stat-item .label { color:var(--text2); font-size:.78em; }
+  .nav-bar { position:sticky; top:0; z-index:100; background:rgba(15,23,42,.96); backdrop-filter:blur(10px); border-bottom:1px solid var(--border); padding:8px 16px; display:flex; gap:5px; flex-wrap:wrap; justify-content:center; }
+  .nav-bar a { color:var(--text2); text-decoration:none; padding:4px 10px; border-radius:6px; font-size:.78em; transition:all .2s; white-space:nowrap; }
+  .nav-bar a:hover,.nav-bar a:focus { background:var(--card-bg); color:var(--accent); }
+  .container { max-width:1400px; margin:0 auto; padding:12px 20px; }
+  .section { margin:28px 0; }
+  .section-title { font-size:1.25em; font-weight:700; padding-bottom:8px; margin-bottom:2px; border-bottom:2px solid var(--border); display:flex; align-items:center; gap:8px; }
+  .section-title .icon { font-size:1.2em; }
+  .section-desc { color:var(--text2); font-size:.82em; margin-bottom:10px; }
+  .rows { display:flex; flex-direction:column; gap:4px; }
+  .row { background:var(--card-bg); border:1px solid var(--border); border-radius:7px; padding:8px 14px; display:flex; align-items:center; gap:12px; transition:all .18s; min-height:46px; }
+  .row:hover { border-color:var(--accent); background:#1a2940; }
+  .row-num { width:26px; height:26px; border-radius:5px; background:var(--border); color:var(--text2); display:flex; align-items:center; justify-content:center; font-size:.72em; font-weight:700; flex-shrink:0; }
+  .row-left { display:flex; flex-direction:column; gap:3px; min-width:150px; max-width:200px; flex-shrink:0; }
+  .row-company { font-weight:700; color:#fff; font-size:.9em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .row-loc { font-size:.72em; color:#fbbf24; white-space:nowrap; }
+  .row-tags { display:flex; flex-wrap:wrap; gap:3px; }
+  .tag { font-size:.66em; padding:2px 7px; border-radius:8px; background:var(--tag-bg); color:var(--tag-text); white-space:nowrap; }
+  .tag.hot { background:#7f1d1d; color:#fca5a5; }
+  .tag.green { background:#14532d; color:#86efac; }
+  .tag.orange { background:#431407; color:#fdba74; }
+  .tag.purple { background:#2d1b4e; color:#c4b5fd; }
+  .row-info { flex:1; display:flex; flex-wrap:wrap; gap:4px 14px; font-size:.76em; color:var(--text2); align-items:center; min-width:0; }
+  .row-info .info-item { white-space:nowrap; }
+  .row-info .info-item strong { color:#cbd5e1; }
+  .row-actions { display:flex; gap:5px; flex-shrink:0; flex-wrap:wrap; align-items:center; }
+  .row-actions a { display:inline-block; padding:4px 11px; border-radius:5px; font-size:.74em; font-weight:600; text-decoration:none; transition:all .2s; white-space:nowrap; }
+  .btn-primary { background:var(--accent); color:#0f172a; }
+  .btn-primary:hover { background:#7dd3fc; }
+  .btn-outline { border:1px solid var(--border); color:var(--text); }
+  .btn-outline:hover { border-color:var(--accent); color:var(--accent); }
+  .row.header-row { background:transparent; border:none; padding:5px 14px; font-size:.74em; color:var(--text2); font-weight:600; min-height:auto; }
+  .row.header-row:hover { background:transparent; border-color:transparent; }
+  .row.header-row .row-left { visibility:hidden; }
+  /* Search Bar */
+  .search-bar-wrap { position:sticky; top:40px; z-index:99; background:rgba(15,23,42,.96); backdrop-filter:blur(10px); padding:10px 20px 8px; border-bottom:1px solid var(--border); display:flex; flex-direction:column; gap:8px; align-items:center; }
+  .search-input-row { display:flex; gap:8px; width:100%; max-width:700px; align-items:center; }
+  .search-input-row input { flex:1; background:var(--card-bg); border:1px solid var(--border); border-radius:20px; padding:8px 18px; color:#fff; font-size:.88em; outline:none; transition:border .2s; }
+  .search-input-row input:focus { border-color:var(--accent); }
+  .search-input-row input::placeholder { color:var(--text2); }
+  .search-result-count { font-size:.78em; color:var(--text2); white-space:nowrap; }
+  .search-chips { display:flex; gap:6px; flex-wrap:wrap; justify-content:center; max-width:900px; }
+  .search-chip { font-size:.72em; padding:5px 13px; border-radius:14px; border:1px solid var(--border); background:transparent; color:var(--text2); cursor:pointer; transition:all .18s; white-space:nowrap; user-select:none; }
+  .search-chip:hover { border-color:var(--accent); color:var(--accent); }
+  .search-chip.active { background:var(--accent); color:#0f172a; border-color:var(--accent); font-weight:600; }
+  .search-chip.hot-chip { border-color:#f87171; color:#fca5a5; }
+  .search-chip.hot-chip:hover,.search-chip.hot-chip.active { background:#f87171; color:#fff; }
+  .row.hidden { display:none; }
+  .section.hidden { display:none; }
+  .no-result { text-align:center; padding:40px; color:var(--text2); font-size:.9em; }
+  .alert { border-radius:7px; padding:12px 18px; margin:12px 0; font-size:.82em; }
+  .alert.tips { background:#1e3a1e; border:1px solid #14532d; color:#86efac; }
+  .alert.warn { background:#3a2e1e; border:1px solid #713f12; color:#fdba74; }
+  .alert.info { background:#1e2a3a; border:1px solid #1e3a5f; color:#7dd3fc; }
+  .alert h3 { margin-bottom:5px; font-size:.92em; }
+  .timeline { display:flex; gap:0; overflow-x:auto; padding:12px 0; }
+  .timeline-item { flex:1; min-width:110px; text-align:center; padding:10px; border-right:2px dashed var(--border); position:relative; }
+  .timeline-item:last-child { border-right:none; }
+  .timeline-month { font-size:1.05em; font-weight:700; color:var(--accent); }
+  .timeline-action { font-size:.74em; color:var(--text2); margin-top:3px; }
+  .timeline-dot { width:9px; height:9px; border-radius:50%; margin:5px auto; }
+  .timeline-dot.hot { background:#f87171; }
+  .timeline-dot.warm { background:#fb923c; }
+  .timeline-dot.cool { background:#38bdf8; }
+  .platform-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:7px; }
+  .platform-card { background:var(--card-bg); border:1px solid var(--border); border-radius:7px; padding:12px 14px; display:flex; flex-direction:column; gap:6px; align-items:center; text-align:center; }
+  .platform-card .plat-name { font-weight:700; font-size:.84em; }
+  .footer { text-align:center; padding:26px 20px; color:var(--text2); font-size:.74em; border-top:1px solid var(--border); margin-top:24px; }
+  .footer a { color:var(--accent); }
+  .expander { text-align:center; padding:4px; cursor:pointer; color:var(--accent); font-size:.8em; }
+  @media (max-width:800px) {
+    .hero h1 { font-size:1.3em; }
+    .row { flex-wrap:wrap; gap:6px; padding:10px 12px; }
+    .row-left { min-width:110px; max-width:100%; }
+    .row-info { flex-direction:column; align-items:flex-start; gap:2px; }
+    .row-actions { width:100%; }
+    .stats-row { gap:14px; }
+    .row-num { display:none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<div class="hero">
+  <h1>🎯 2027–2029届 实习招聘信息大全</h1>
+  <p class="subtitle">覆盖12大行业 · 100+企业 · 2026年暑期实习 · 持续更新</p>
+  <span class="update">📅 更新于 2026年6月4日 | 信息来源：企业官网、24365平台、高校就业网</span>
+  <div class="stats-row">
+    <div class="stat-item"><div class="num">100+</div><div class="label">收录企业</div></div>
+    <div class="stat-item"><div class="num">12</div><div class="label">行业分类</div></div>
+    <div class="stat-item"><div class="num">15万+</div><div class="label">实习岗位</div></div>
+    <div class="stat-item"><div class="num">50%+</div><div class="label">平均转正率</div></div>
+  </div>
+</div>
+
+<!-- ============ NAV ============ -->
+<nav class="nav-bar">
+  <a href="#internet">🌐 互联网大厂</a>
+  <a href="#hardware">💻 硬科技/AI/半导体</a>
+  <a href="#hardware2">📱 消费电子/通信</a>
+  <a href="#internet2">🌍 互联网第二梯队</a>
+  <a href="#auto">🚗 新能源汽车</a>
+  <a href="#gaming">🎮 游戏公司</a>
+  <a href="#finance">🏦 金融/银行</a>
+  <a href="#soe">🏛️ 国企/央企</a>
+  <a href="#consulting">📊 咨询/四大</a>
+  <a href="#fmcg">🛍️ 快消/零售</a>
+  <a href="#medical">🏥 医药/医疗</a>
+  <a href="#estate">🏗️ 房地产/物业</a>
+  <a href="#logistics">🚛 物流/供应链</a>
+  <a href="#energy">⚡ 新能源/能源</a>
+  <a href="#platforms">🔗 投递平台</a>
+  <a href="#timeline">⏱️ 时间线</a>
+</nav>
+
+<!-- ============ 搜索栏 ============ -->
+<div class="search-bar-wrap" id="searchBar">
+  <div class="search-input-row">
+    <input type="text" id="searchInput" placeholder="🔍 输入公司名、城市、行业、岗位关键词筛选…" oninput="doSearch()" autofocus>
+    <span class="search-result-count" id="resultCount">共 99 条</span>
+  </div>
+  <div class="search-chips" id="searchChips">
+    <span class="search-chip" onclick="chipClick(this,'🔥热招中')">🔥 热招中</span>
+    <span class="search-chip" onclick="chipClick(this,'✅可转正')">✅ 可转正</span>
+    <span class="search-chip" onclick="chipClick(this,'北京')">📍 北京</span>
+    <span class="search-chip" onclick="chipClick(this,'上海')">📍 上海</span>
+    <span class="search-chip" onclick="chipClick(this,'深圳')">📍 深圳</span>
+    <span class="search-chip" onclick="chipClick(this,'广州')">📍 广州</span>
+    <span class="search-chip" onclick="chipClick(this,'杭州')">📍 杭州</span>
+    <span class="search-chip" onclick="chipClick(this,'成都')">📍 成都</span>
+    <span class="search-chip" onclick="chipClick(this,'武汉')">📍 武汉</span>
+    <span class="search-chip" onclick="chipClick(this,'AI/大模型')">🤖 AI/大模型</span>
+    <span class="search-chip" onclick="chipClick(this,'算法')">🧮 算法</span>
+    <span class="search-chip" onclick="chipClick(this,'芯片')">💾 芯片</span>
+    <span class="search-chip" onclick="chipClick(this,'产品')">📦 产品</span>
+    <span class="search-chip" onclick="chipClick(this,'自动驾驶')">🚗 自动驾驶</span>
+    <span class="search-chip" onclick="chipClick(this,'金融/银行')">🏦 金融/银行</span>
+    <span class="search-chip" onclick="chipClick(this,'快消')">🛍️ 快消</span>
+    <span class="search-chip" onclick="chipClick(this,'新能源')">⚡ 新能源</span>
+    <span class="search-chip" onclick="chipClick(this,'医药')">🏥 医药</span>
+    <span class="search-chip" onclick="chipClick(this,'游戏')">🎮 游戏</span>
+    <span class="search-chip" onclick="chipClick(this,'国企/央企')">🏛️ 国企/央企</span>
+    <span class="search-chip hot-chip" onclick="chipClick(this,'⏰即将截止')">⏰ 即将截止</span>
+    <span class="search-chip" onclick="clearSearch()" style="border-color:#f87171;color:#f87171;">✕ 清除</span>
+  </div>
+</div>
+
+<div class="container">
+
+<div class="alert tips">
+  <h3>💡 使用说明</h3>
+  <p>① 每行是一家企业的完整招聘信息（企业名→工作地区→岗位→投递按钮）；② 📍黄色文字 = 工作城市；③ 标签：🔥=热招中/⏰=即将截止/✅=可转正/⚠️=关注官网；④ <strong>2027届是主力</strong>，2028/2029届部分项目开放；⑤ 点击顶部导航栏快速跳转分类。</p>
+</div>
+
+<!-- ================================================================== -->
+<!-- 一、互联网/科技大厂 -->
+<!-- ================================================================== -->
+<div class="section" id="internet">
+  <h2 class="section-title"><span class="icon">🌐</span> 互联网 / 科技大厂 (11家)</h2>
+  <p class="section-desc">AI岗位爆发，各厂转正率>50%，实习即锁定秋招Offer的最佳途径。</p>
+  <div class="rows">
+    <div class="row header-row"><span class="row-num">#</span><span class="row-left">企业 / 工作地区</span><span class="row-info">面向对象 / 岗位方向</span><span class="row-actions">投递</span></div>
+
+    <div class="row"><span class="row-num">01</span><span class="row-left"><span class="row-company">阿里巴巴 Alibaba</span><span class="row-loc">📍杭州/北京/上海/广州/深圳/成都/南京/武汉/西安/香港</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅转正</span><span class="tag">AI占80%</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2026.11–2027.10毕业</span><span class="info-item"><strong>岗：</strong>算法/研发/芯片/产品/游戏/运营</span><span class="info-item" style="color:#fbbf24;">3月18日启动</span></span><span class="row-actions"><a class="btn-primary" href="https://campus-talent.alibaba.com" target="_blank">投递</a><a class="btn-outline" href="https://talent.alibaba.com" target="_blank">官网</a></span></div>
+
+    <div class="row"><span class="row-num">02</span><span class="row-left"><span class="row-company">腾讯 Tencent</span><span class="row-loc">📍深圳/北京/广州/上海/成都</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅转正</span><span class="tag">10,000+岗</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2026.9–2027.12毕业</span><span class="info-item"><strong>岗：</strong>软件开发/算法/AI/产品/游戏/运营</span><span class="info-item" style="color:#fbbf24;">技术扩招36%</span></span><span class="row-actions"><a class="btn-primary" href="https://join.qq.com" target="_blank">投递</a><a class="btn-outline" href="https://careers.tencent.com" target="_blank">官网</a></span></div>
+
+    <div class="row"><span class="row-num">03</span><span class="row-left"><span class="row-company">字节跳动 ByteDance</span><span class="row-loc">📍北京/上海/深圳/杭州/广州/成都</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅转正>50%</span><span class="tag">7,000+岗</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2026.9–2027.8毕业</span><span class="info-item"><strong>岗：</strong>大模型/算法/芯片/前后端/产品</span><span class="info-item" style="color:#fbbf24;">最高500元/天</span></span><span class="row-actions"><a class="btn-primary" href="https://jobs.bytedance.com/campus" target="_blank">投递</a><a class="btn-outline" href="https://job.toutiao.com" target="_blank">官网</a></span></div>
+
+    <div class="row"><span class="row-num">04</span><span class="row-left"><span class="row-company">百度 Baidu</span><span class="row-loc">📍北京/成都/上海/武汉/广州/深圳/杭州/西安/重庆</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅转正>50%</span><span class="tag">5,000+岗</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2026.9–2027.8毕业</span><span class="info-item"><strong>岗：</strong>大模型/多模态/自动驾驶/昆仑芯(AI芯片)</span><span class="info-item" style="color:#fbbf24;">90%+岗位与AI相关</span></span><span class="row-actions"><a class="btn-primary" href="https://talent.baidu.com" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">05</span><span class="row-left"><span class="row-company">华为 Huawei</span><span class="row-loc">📍深圳/上海/北京/东莞/南京/武汉/西安/成都</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅转正</span><span class="tag orange">≥2个月全职</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届本/硕/博</span><span class="info-item"><strong>岗：</strong>5G/6G/芯片/云计算/智能汽车/终端/财经</span><span class="info-item" style="color:#fbbf24;">3月15日启动</span></span><span class="row-actions"><a class="btn-primary" href="https://career.huawei.com" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">06</span><span class="row-left"><span class="row-company">拼多多 PDD</span><span class="row-loc">📍上海</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅超高转正</span><span class="tag orange">⏰6.14截止</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>服务端/算法(CV/NLP/推荐)/大模型/前端/安全</span><span class="info-item" style="color:#f87171;">6月14日截止！</span></span><span class="row-actions"><a class="btn-primary" href="https://careers.pinduoduo.com" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">07</span><span class="row-left"><span class="row-company">美团 Meituan</span><span class="row-loc">📍北京/上海/成都/深圳</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅转正实习</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>后端/前端/算法/数据/产品/运营</span></span><span class="row-actions"><a class="btn-primary" href="https://zhaopin.meituan.com" target="_blank">投递</a><a class="btn-outline" href="https://campus.meituan.com" target="_blank">官网</a></span></div>
+
+    <div class="row"><span class="row-num">08</span><span class="row-left"><span class="row-company">快手 Kuaishou</span><span class="row-loc">📍北京/杭州/上海/深圳/广州</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅满40天→留用</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2026.11–2027.10毕业</span><span class="info-item"><strong>岗：</strong>算法/工程/产品/运营/设计</span><span class="info-item" style="color:#4ade80;">不限次数重投其他岗</span></span><span class="row-actions"><a class="btn-primary" href="https://zhaopin.kuaishou.cn" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">09</span><span class="row-left"><span class="row-company">网易互娱 NetEase</span><span class="row-loc">📍广州/杭州/上海</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅超高转正</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>策划/技术/美术/UX/市场/运营等30+岗</span><span class="info-item" style="color:#4ade80;">免费食堂+租房补贴</span></span><span class="row-actions"><a class="btn-primary" href="https://game.campus.163.com" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">10</span><span class="row-left"><span class="row-company">京东 JD.com</span><span class="row-loc">📍北京为主</span><span class="row-tags"><span class="tag orange">⚠️陆续释放</span><span class="tag green">✅转正</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>技术/产品/供应链/物流/金融科技</span></span><span class="row-actions"><a class="btn-primary" href="https://zhaopin.jd.com" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">11</span><span class="row-left"><span class="row-company">小红书 RED</span><span class="row-loc">📍上海/北京</span><span class="row-tags"><span class="tag orange">⚠️持续关注</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>技术/算法/产品/运营/设计</span></span><span class="row-actions"><a class="btn-outline" href="https://job.xiaohongshu.com" target="_blank">官网</a></span></div>
+  </div>
+</div>
+
+<!-- ================================================================== -->
+<!-- 二、互联网第二梯队 -->
+<!-- ================================================================== -->
+<div class="section" id="internet2">
+  <h2 class="section-title"><span class="icon">🌍</span> 互联网第二梯队 / 垂直平台 (9家)</h2>
+  <p class="section-desc">细分赛道龙头，同样值得关注。</p>
+  <div class="rows">
+    <div class="row header-row"><span class="row-num">#</span><span class="row-left">企业 / 工作地区</span><span class="row-info">面向对象 / 岗位方向</span><span class="row-actions">投递</span></div>
+
+    <div class="row"><span class="row-num">12</span><span class="row-left"><span class="row-company">滴滴 DiDi</span><span class="row-loc">📍北京/杭州/上海</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅转正</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>算法/工程/产品/AI/自动驾驶</span></span><span class="row-actions"><a class="btn-primary" href="https://campus.didiglobal.com" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">13</span><span class="row-left"><span class="row-company">携程 Trip.com</span><span class="row-loc">📍上海</span><span class="row-tags"><span class="tag orange">⚠️关注官网</span><span class="tag green">✅转正</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>算法/后端/前端/产品/运营/商旅</span></span><span class="row-actions"><a class="btn-outline" href="https://campus.trip.com" target="_blank">官网</a></span></div>
+
+    <div class="row"><span class="row-num">14</span><span class="row-left"><span class="row-company">哔哩哔哩 Bilibili</span><span class="row-loc">📍上海</span><span class="row-tags"><span class="tag orange">⚠️关注官网</span><span class="tag green">✅转正</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>技术/算法/产品/内容运营/设计</span></span><span class="row-actions"><a class="btn-outline" href="https://jobs.bilibili.com" target="_blank">官网</a></span></div>
+
+    <div class="row"><span class="row-num">15</span><span class="row-left"><span class="row-company">得物 Poizon</span><span class="row-loc">📍上海</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅转正</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>技术/算法/产品/运营/电商</span></span><span class="row-actions"><a class="btn-primary" href="https://campus.dewu.com" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">16</span><span class="row-left"><span class="row-company">唯品会 VIP.com</span><span class="row-loc">📍广州</span><span class="row-tags"><span class="tag orange">⚠️关注官网</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>技术/算法/产品/电商运营</span></span><span class="row-actions"><a class="btn-outline" href="https://campus.vip.com" target="_blank">官网</a></span></div>
+
+    <div class="row"><span class="row-num">17</span><span class="row-left"><span class="row-company">贝壳找房 Beike</span><span class="row-loc">📍北京</span><span class="row-tags"><span class="tag orange">⚠️关注官网</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>技术/算法/产品/运营</span></span><span class="row-actions"><a class="btn-outline" href="https://campus.ke.com" target="_blank">官网</a></span></div>
+
+    <div class="row"><span class="row-num">18</span><span class="row-left"><span class="row-company">搜狐 Sohu</span><span class="row-loc">📍北京</span><span class="row-tags"><span class="tag orange">⚠️关注官网</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>技术/产品/内容/运营</span></span><span class="row-actions"><a class="btn-outline" href="https://hr.sohu.com" target="_blank">官网</a></span></div>
+
+    <div class="row"><span class="row-num">19</span><span class="row-left"><span class="row-company">知乎 Zhihu</span><span class="row-loc">📍北京</span><span class="row-tags"><span class="tag orange">⚠️关注官网</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>算法/工程/产品/运营/内容</span></span><span class="row-actions"><a class="btn-outline" href="https://www.zhihu.com/careers" target="_blank">官网</a></span></div>
+  </div>
+</div>
+
+<!-- ================================================================== -->
+<!-- 三、硬科技/AI/半导体 -->
+<!-- ================================================================== -->
+<div class="section" id="hardware">
+  <h2 class="section-title"><span class="icon">💻</span> 硬科技 / AI / 半导体 / 芯片 (10家)</h2>
+  <p class="section-desc">芯片、AI、机器人等前沿科技，国家战略方向，岗位含金量极高。</p>
+  <div class="rows">
+    <div class="row header-row"><span class="row-num">#</span><span class="row-left">企业 / 工作地区</span><span class="row-info">面向对象 / 岗位方向</span><span class="row-actions">投递</span></div>
+
+    <div class="row"><span class="row-num">20</span><span class="row-left"><span class="row-company">大疆 DJI</span><span class="row-loc">📍深圳</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅转正</span><span class="tag purple">AI专项</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>AI算法/机器人/图像/飞行系统/嵌入式/云台</span><span class="info-item" style="color:#fbbf24;">AI实习生专项计划</span></span><span class="row-actions"><a class="btn-primary" href="https://we.dji.com" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">21</span><span class="row-left"><span class="row-company">科大讯飞 iFLYTEK</span><span class="row-loc">📍合肥</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅转正</span><span class="tag purple">飞YOUNG计划</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>AI算法/NLP/语音/大模型/产品/研发</span><span class="info-item" style="color:#fbbf24;">培养留用专项</span></span><span class="row-actions"><a class="btn-primary" href="https://campus.iflytek.com" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">22</span><span class="row-left"><span class="row-company">安谋科技 Arm China</span><span class="row-loc">📍上海/北京/深圳</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅转正</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2026.9–2027.12(部分至2028届)</span><span class="info-item"><strong>岗：</strong>CPU/NPU/GPU/AI/Verification</span><span class="info-item" style="color:#4ade80;">1v1导师+真实项目</span></span><span class="row-actions"><a class="btn-primary" href="https://www.armchina.com/careers" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">23</span><span class="row-left"><span class="row-company">英特尔中国 Intel</span><span class="row-loc">📍上海/北京/深圳</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅转正</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027/2028届</span><span class="info-item"><strong>专业：</strong>CS/软件/通信/电子/机械/自动化</span></span><span class="row-actions"><a class="btn-primary" href="https://chinacampus.jobs.intel.cn" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">24</span><span class="row-left"><span class="row-company">AMD 超威半导体</span><span class="row-loc">📍上海/北京</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag">Fall 7-12月</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届/部分2028届</span><span class="info-item"><strong>岗：</strong>LLM优化/AI-ML/GPU/芯片验证/后端</span></span><span class="row-actions"><a class="btn-primary" href="https://careers.amd.com" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">25</span><span class="row-left"><span class="row-company">商汤科技 SenseTime</span><span class="row-loc">📍上海/北京/深圳</span><span class="row-tags"><span class="tag orange">⚠️关注官网</span><span class="tag green">✅转正</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>CV/NLP/大模型/AI应用/工程</span></span><span class="row-actions"><a class="btn-outline" href="https://www.sensetime.com/careers" target="_blank">官网</a></span></div>
+
+    <div class="row"><span class="row-num">26</span><span class="row-left"><span class="row-company">旷视科技 Megvii</span><span class="row-loc">📍北京</span><span class="row-tags"><span class="tag orange">⚠️关注官网</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>CV/AI/算法/工程</span></span><span class="row-actions"><a class="btn-outline" href="https://www.megvii.com/careers" target="_blank">官网</a></span></div>
+
+    <div class="row"><span class="row-num">27</span><span class="row-left"><span class="row-company">寒武纪 Cambricon</span><span class="row-loc">📍北京/上海</span><span class="row-tags"><span class="tag orange">⚠️关注官网</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>AI芯片/编译器/深度学习框架</span></span><span class="row-actions"><a class="btn-outline" href="https://www.cambricon.com/careers" target="_blank">官网</a></span></div>
+
+    <div class="row"><span class="row-num">28</span><span class="row-left"><span class="row-company">三石园科技</span><span class="row-loc">📍广东珠海高新区</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag">专业不限</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届/2028届</span><span class="info-item"><strong>岗：</strong>光学/物理/机械/电子信息 或 专业不限版</span><span class="info-item">7月–8月</span></span><span class="row-actions"><a class="btn-outline" href="mailto:HR1@triple-stone.com">📧HR1@triple-stone.com</a></span></div>
+
+    <div class="row"><span class="row-num">29</span><span class="row-left"><span class="row-company">欣旺达 Sunwoda</span><span class="row-loc">📍深圳</span><span class="row-tags"><span class="tag green">✅转正实习</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>新能源电池/储能/研发/工程/制造</span></span><span class="row-actions"><a class="btn-primary" href="https://www.sunwoda.com" target="_blank">投递</a></span></div>
+  </div>
+</div>
+
+<!-- ================================================================== -->
+<!-- 四、消费电子/通信 -->
+<!-- ================================================================== -->
+<div class="section" id="hardware2">
+  <h2 class="section-title"><span class="icon">📱</span> 消费电子 / 通信设备 (10家)</h2>
+  <p class="section-desc">手机、IoT、通信设备，研发岗位多，转正率高。</p>
+  <div class="rows">
+    <div class="row header-row"><span class="row-num">#</span><span class="row-left">企业 / 工作地区</span><span class="row-info">面向对象 / 岗位方向</span><span class="row-actions">投递</span></div>
+
+    <div class="row"><span class="row-num">30</span><span class="row-left"><span class="row-company">小米 Xiaomi</span><span class="row-loc">📍北京/上海/深圳/武汉/南京/西安</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅转正</span><span class="tag purple">AI专项</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>AI/大模型/具身智能/芯片/软件/硬件/汽车</span><span class="info-item" style="color:#fbbf24;">AI人才专项+汽车+机器人</span></span><span class="row-actions"><a class="btn-primary" href="https://xiaomi.jobs.f.mioffice.cn" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">31</span><span class="row-left"><span class="row-company">联想 Lenovo</span><span class="row-loc">📍北京/天津/上海/深圳/武汉/成都/合肥/苏州/大连/广州/长沙/西安/郑州/杭州/厦门</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅转正</span><span class="tag purple">AI专项</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>AI开发/具身智能/CV/语音/软件开发/硬件/产品</span><span class="info-item" style="color:#fbbf24;">15+城市</span></span><span class="row-actions"><a class="btn-primary" href="https://talent.lenovo.com.cn" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">32</span><span class="row-left"><span class="row-company">vivo</span><span class="row-loc">📍深圳/东莞/南京/北京/上海/杭州/西安</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅转正</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2026.8–2027.7毕业</span><span class="info-item"><strong>岗：</strong>算法/软件/硬件/通信/测试/营销/设计/供应链</span></span><span class="row-actions"><a class="btn-primary" href="https://hr.vivo.com" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">33</span><span class="row-left"><span class="row-company">OPPO</span><span class="row-loc">📍深圳/东莞</span><span class="row-tags"><span class="tag orange">⚠️关注官网</span><span class="tag green">✅转正</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>算法/软件/硬件/影像/快充/产品</span></span><span class="row-actions"><a class="btn-outline" href="https://career.oppo.com" target="_blank">官网</a></span></div>
+
+    <div class="row"><span class="row-num">34</span><span class="row-left"><span class="row-company">荣耀 Honor</span><span class="row-loc">📍深圳</span><span class="row-tags"><span class="tag orange">⚠️关注官网</span><span class="tag green">✅转正</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>AI/影像/通信/软件/硬件/产品</span></span><span class="row-actions"><a class="btn-outline" href="https://www.hihonor.com/careers" target="_blank">官网</a></span></div>
+
+    <div class="row"><span class="row-num">35</span><span class="row-left"><span class="row-company">中兴通讯 ZTE</span><span class="row-loc">📍深圳/南京/西安/上海</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅转正</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>5G/通信/芯片/软件/硬件/AI</span></span><span class="row-actions"><a class="btn-primary" href="https://job.zte.com.cn" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">36</span><span class="row-left"><span class="row-company">海康威视 Hikvision</span><span class="row-loc">📍杭州</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅超新星计划</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>AI/算法/嵌入式/硬件/软件/安防</span><span class="info-item" style="color:#fbbf24;">超新星实习生计划</span></span><span class="row-actions"><a class="btn-primary" href="https://campus.hikvision.com" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">37</span><span class="row-left"><span class="row-company">大华股份 Dahua</span><span class="row-loc">📍杭州</span><span class="row-tags"><span class="tag orange">⚠️关注官网</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>AI/算法/嵌入式/硬件/软件</span></span><span class="row-actions"><a class="btn-outline" href="https://campus.dahuatech.com" target="_blank">官网</a></span></div>
+  </div>
+</div>
+
+<!-- ================================================================== -->
+<!-- 五、新能源汽车/出行 -->
+<!-- ================================================================== -->
+<div class="section" id="auto">
+  <h2 class="section-title"><span class="icon">🚗</span> 新能源汽车 / 智能出行 (9家)</h2>
+  <p class="section-desc">智能电动汽车全产业链爆发：整车→自动驾驶→电池→芯片。</p>
+  <div class="rows">
+    <div class="row header-row"><span class="row-num">#</span><span class="row-left">企业 / 工作地区</span><span class="row-info">面向对象 / 岗位方向</span><span class="row-actions">投递</span></div>
+
+    <div class="row"><span class="row-num">38</span><span class="row-left"><span class="row-company">小鹏汽车 XPeng</span><span class="row-loc">📍广州/深圳/上海/北京</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅锁定Offer</span><span class="tag">200+岗</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届(2026.9–2027.8)</span><span class="info-item"><strong>岗：</strong>自动驾驶/智能座舱/三电/软件/产品</span></span><span class="row-actions"><a class="btn-primary" href="https://xiaopeng.com/careers.html" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">39</span><span class="row-left"><span class="row-company">比亚迪 BYD</span><span class="row-loc">📍深圳/西安/长沙/合肥/常州</span><span class="row-tags"><span class="tag orange">⚠️关注</span><span class="tag green">✅转正</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>汽车工程/电池/电子/软件/制造</span></span><span class="row-actions"><a class="btn-primary" href="https://job.byd.com" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">40</span><span class="row-left"><span class="row-company">理想汽车 Li Auto</span><span class="row-loc">📍北京/上海/常州</span><span class="row-tags"><span class="tag orange">⚠️关注</span><span class="tag green">✅转正</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>智能驾驶/智能空间/整车/AI算法</span></span><span class="row-actions"><a class="btn-primary" href="https://www.lixiang.com/careers" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">41</span><span class="row-left"><span class="row-company">蔚来 NIO</span><span class="row-loc">📍上海/北京/合肥/南京</span><span class="row-tags"><span class="tag orange">⚠️关注</span><span class="tag green">✅转正</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>自动驾驶/智能座舱/电驱/软件/运营</span></span><span class="row-actions"><a class="btn-primary" href="https://www.nio.com/careers" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">42</span><span class="row-left"><span class="row-company">宁德时代 CATL</span><span class="row-loc">📍宁德/上海/溧阳</span><span class="row-tags"><span class="tag orange">⚠️关注</span><span class="tag green">✅转正</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>电池研发/材料/工艺/智能制造/AI</span></span><span class="row-actions"><a class="btn-primary" href="https://www.catl.com/careers" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">43</span><span class="row-left"><span class="row-company">奇瑞智能研究院</span><span class="row-loc">📍芜湖</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅转正</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届硕/博</span><span class="info-item"><strong>岗：</strong>智能化/自动驾驶/AI/芯片</span></span><span class="row-actions"><a class="btn-primary" href="https://www.chery.com/careers" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">44</span><span class="row-left"><span class="row-company">特斯拉 Tesla</span><span class="row-loc">📍上海/北京</span><span class="row-tags"><span class="tag orange">⚠️关注</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>车辆工程/软件/AI/制造/供应链</span></span><span class="row-actions"><a class="btn-outline" href="https://www.tesla.com/careers" target="_blank">官网</a></span></div>
+
+    <div class="row"><span class="row-num">45</span><span class="row-left"><span class="row-company">吉利汽车 Geely</span><span class="row-loc">📍杭州/宁波/上海</span><span class="row-tags"><span class="tag orange">⚠️关注</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>智能驾驶/新能源/整车研发/软件</span></span><span class="row-actions"><a class="btn-outline" href="https://campus.geely.com" target="_blank">官网</a></span></div>
+
+    <div class="row"><span class="row-num">46</span><span class="row-left"><span class="row-company">长城汽车 GWM</span><span class="row-loc">📍保定/上海</span><span class="row-tags"><span class="tag orange">⚠️关注</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>混动/纯电/智能驾驶/整车</span></span><span class="row-actions"><a class="btn-outline" href="https://www.gwm.com.cn/careers" target="_blank">官网</a></span></div>
+  </div>
+</div>
+
+<!-- ================================================================== -->
+<!-- 六、游戏公司 -->
+<!-- ================================================================== -->
+<div class="section" id="gaming">
+  <h2 class="section-title"><span class="icon">🎮</span> 游戏公司 (4家)</h2>
+  <p class="section-desc">上海游戏圈集中发力，30+游戏公司开放暑期实习。</p>
+  <div class="rows">
+    <div class="row header-row"><span class="row-num">#</span><span class="row-left">企业 / 工作地区</span><span class="row-info">面向对象 / 岗位方向</span><span class="row-actions">投递</span></div>
+
+    <div class="row"><span class="row-num">47</span><span class="row-left"><span class="row-company">米哈游 miHoYo</span><span class="row-loc">📍上海</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅转正</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>开发/策划/美术/引擎/AI/平台</span><span class="info-item" style="color:#a78bfa;">IP：原神/崩坏/绝区零</span></span><span class="row-actions"><a class="btn-primary" href="https://careers.mihoyo.com" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">48</span><span class="row-left"><span class="row-company">莉莉丝游戏 Lilith</span><span class="row-loc">📍上海</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅转正</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>开发/策划/美术/AI</span><span class="info-item" style="color:#a78bfa;">IP：万国觉醒/AFK Journey</span></span><span class="row-actions"><a class="btn-primary" href="https://www.lilithgames.com/careers" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">49</span><span class="row-left"><span class="row-company">叠纸游戏 Papergames</span><span class="row-loc">📍上海</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅转正</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>开发/策划/美术/TA</span><span class="info-item" style="color:#a78bfa;">IP：恋与深空/无限暖暖</span></span><span class="row-actions"><a class="btn-primary" href="https://www.papegames.com/careers" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">50</span><span class="row-left"><span class="row-company">鹰角网络 Hypergryph</span><span class="row-loc">📍上海</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅转正</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>开发/策划/美术/TA/引擎</span><span class="info-item" style="color:#a78bfa;">IP：明日方舟/来自星尘</span></span><span class="row-actions"><a class="btn-primary" href="https://www.hypergryph.com/careers" target="_blank">投递</a></span></div>
+  </div>
+</div>
+
+<!-- ================================================================== -->
+<!-- 七、金融/银行 -->
+<!-- ================================================================== -->
+<div class="section" id="finance">
+  <h2 class="section-title"><span class="icon">🏦</span> 金融 / 银行 / 券商 (7家)</h2>
+  <p class="section-desc">银行金融科技岗需求旺盛，STEM+金融复合背景受青睐。</p>
+  <div class="rows">
+    <div class="row header-row"><span class="row-num">#</span><span class="row-left">企业 / 工作地区</span><span class="row-info">面向对象 / 岗位方向</span><span class="row-actions">投递</span></div>
+
+    <div class="row"><span class="row-num">51</span><span class="row-left"><span class="row-company">中国民生银行</span><span class="row-loc">📍全国各分行</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅优者留用</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027/2028届</span><span class="info-item"><strong>岗：</strong>综合金融/跟岗+培训+导师</span><span class="info-item" style="color:#f87171;">首批5月5日截止</span></span><span class="row-actions"><a class="btn-primary" href="https://career.cmbc.com.cn" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">52</span><span class="row-left"><span class="row-company">民生科技 FinTech</span><span class="row-loc">📍武汉(深圳/成都/西安/合肥)</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅转正</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027/2028届</span><span class="info-item"><strong>岗：</strong>数据AI/数据研发/软件开发</span></span><span class="row-actions"><a class="btn-primary" href="https://career.cmbc.com.cn" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">53</span><span class="row-left"><span class="row-company">上海银行 BOSC</span><span class="row-loc">📍上海</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅转正</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027/2028届</span><span class="info-item"><strong>岗：</strong>运营/营销/金融科技/数据分析/开发</span></span><span class="row-actions"><a class="btn-primary" href="https://bosc.zhiye.com/intern/jobs" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">54</span><span class="row-left"><span class="row-company">南京银行 Blue π</span><span class="row-loc">📍南京</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅直通Offer</span><span class="tag orange">仅硕士</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届硕士</span><span class="info-item"><strong>岗：</strong>AI/大数据(金融科技提前批)</span></span><span class="row-actions"><a class="btn-primary" href="https://job.njcb.com.cn" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">55</span><span class="row-left"><span class="row-company">国内券商/基金</span><span class="row-loc">📍北京/上海/深圳</span><span class="row-tags"><span class="tag hot">🔥正值高峰</span><span class="tag green">✅转正</span></span></span><span class="row-info"><span class="info-item"><strong>包含：</strong>中金CICC/中信/华泰</span><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>投行/研究/交易/量化/财富管理</span></span><span class="row-actions"><a class="btn-primary" href="https://www.cicc.com/careers" target="_blank">中金</a><a class="btn-outline" href="https://careers.citics.com" target="_blank">中信</a></span></div>
+
+    <div class="row"><span class="row-num">56</span><span class="row-left"><span class="row-company">平安银行</span><span class="row-loc">📍深圳/上海/全国</span><span class="row-tags"><span class="tag orange">⚠️关注</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>金融科技/对公/零售/风险</span></span><span class="row-actions"><a class="btn-outline" href="https://campus.pingan.com" target="_blank">官网</a></span></div>
+
+    <div class="row"><span class="row-num">57</span><span class="row-left"><span class="row-company">招商银行</span><span class="row-loc">📍深圳/上海/北京/南京/杭州等</span><span class="row-tags"><span class="tag orange">⚠️关注</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>金融科技/零售/对公/管培</span></span><span class="row-actions"><a class="btn-outline" href="https://career.cmbchina.com" target="_blank">官网</a></span></div>
+  </div>
+</div>
+
+<!-- ================================================================== -->
+<!-- 八、国企/央企 -->
+<!-- ================================================================== -->
+<div class="section" id="soe">
+  <h2 class="section-title"><span class="icon">🏛️</span> 国企 / 央企 / 研究机构 (8家)</h2>
+  <p class="section-desc">稳定性强、福利完善，适合追求长期发展的同学。</p>
+  <div class="rows">
+    <div class="row header-row"><span class="row-num">#</span><span class="row-left">企业 / 工作地区</span><span class="row-info">面向对象 / 岗位方向</span><span class="row-actions">投递</span></div>
+
+    <div class="row"><span class="row-num">58</span><span class="row-left"><span class="row-company">中国信通院 CAICT 星海计划</span><span class="row-loc">📍北京</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅转正</span><span class="tag">欢迎28/29届</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届为主+2028/2029届</span><span class="info-item"><strong>方向：</strong>AI/网络安全/大数据/元宇宙/数字化</span><span class="info-item"><strong>专业：</strong>工学/理学/经济/法学/管理学</span></span><span class="row-actions"><a class="btn-primary" href="https://www.caict.ac.cn" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">59</span><span class="row-left"><span class="row-company">中国移动</span><span class="row-loc">📍北京/广西/陕西/青海等多个省公司</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅转正</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>技术(通信/IT/大数据)/市场/综合</span></span><span class="row-actions"><a class="btn-primary" href="https://job.10086.cn" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">60</span><span class="row-left"><span class="row-company">中国电信</span><span class="row-loc">📍北京/上海/广州/成都等</span><span class="row-tags"><span class="tag orange">⚠️关注</span><span class="tag green">✅转正</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>方向：</strong>云计算/大数据/AI/5G/网信安全</span><span class="info-item" style="color:#fbbf24;">天翼云/星辰大模型</span></span><span class="row-actions"><a class="btn-primary" href="https://zhaopin.telecomjs.com" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">61</span><span class="row-left"><span class="row-company">中国联通</span><span class="row-loc">📍全国多省</span><span class="row-tags"><span class="tag orange">⚠️关注</span><span class="tag green">✅转正</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>方向：</strong>AI/大数据/云计算/网络安全/软件开发</span></span><span class="row-actions"><a class="btn-primary" href="https://zhaopin.chinaunicom.com.cn" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">62</span><span class="row-left"><span class="row-company">国家电网</span><span class="row-loc">📍各省市电力公司</span><span class="row-tags"><span class="tag orange">⚠️关注</span><span class="tag green">✅转正</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>方向：</strong>电气工程/电力系统/自动化/能源互联网</span><span class="info-item">各省公司独立招聘</span></span><span class="row-actions"><a class="btn-primary" href="https://zhaopin.sgcc.com.cn" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">63</span><span class="row-left"><span class="row-company">中国石油 CNPC</span><span class="row-loc">📍全国多省</span><span class="row-tags"><span class="tag orange">⚠️关注</span><span class="tag green">✅转正</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>方向：</strong>勘探开发/炼化/油气储运/IT/财务</span></span><span class="row-actions"><a class="btn-primary" href="https://zhaopin.cnpc.com.cn" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">64</span><span class="row-left"><span class="row-company">中国石化 Sinopec</span><span class="row-loc">📍全国多省</span><span class="row-tags"><span class="tag orange">⚠️关注</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>方向：</strong>勘探开发/炼化/化工/机械/IT/财务</span></span><span class="row-actions"><a class="btn-outline" href="http://job.sinopec.com" target="_blank">官网</a></span></div>
+
+    <div class="row"><span class="row-num">65</span><span class="row-left"><span class="row-company">中广核 CGN</span><span class="row-loc">📍深圳/阳江/红沿河等</span><span class="row-tags"><span class="tag orange">⚠️关注</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>方向：</strong>核工程/电气/自动化/IT</span></span><span class="row-actions"><a class="btn-outline" href="https://campus.cgnpc.com.cn" target="_blank">官网</a></span></div>
+  </div>
+</div>
+
+<!-- ================================================================== -->
+<!-- 九、咨询/四大/法律 -->
+<!-- ================================================================== -->
+<div class="section" id="consulting">
+  <h2 class="section-title"><span class="icon">📊</span> 咨询 / 四大 / 专业服务 (5组)</h2>
+  <p class="section-desc">外资投行/咨询主要批次已截止，四大&券商正值窗口/补录。</p>
+  <div class="rows">
+    <div class="row header-row"><span class="row-num">#</span><span class="row-left">企业 / 工作地区</span><span class="row-info">面向对象 / 岗位方向</span><span class="row-actions">投递</span></div>
+
+    <div class="row"><span class="row-num">66</span><span class="row-left"><span class="row-company">四大会计师事务所</span><span class="row-loc">📍北上广深为主</span><span class="row-tags"><span class="tag hot">🔥集中开放</span><span class="tag green">✅转正50-70%</span></span></span><span class="row-info"><span class="info-item"><strong>包含：</strong>PwC/德勤/安永/毕马威</span><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>审计/税务/咨询/风控</span><span class="info-item">提前练笔试(行测+专业题)</span></span><span class="row-actions"><a class="btn-primary" href="https://www.pwccn.com/zh/careers" target="_blank">PwC</a><a class="btn-outline" href="https://www.deloitte.com/cn/zh/careers" target="_blank">德勤</a><a class="btn-outline" href="https://www.ey.com/zh_cn/careers" target="_blank">安永</a><a class="btn-outline" href="https://home.kpmg/cn/zh/home/about/careers.html" target="_blank">毕马威</a></span></div>
+
+    <div class="row"><span class="row-num">67</span><span class="row-left"><span class="row-company">天同律师事务所</span><span class="row-loc">📍北京</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅优异可转正</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027/2028届法学</span><span class="info-item"><strong>方向：</strong>争议解决</span><span class="info-item"><strong>要求：</strong>知名院校+法考+≥4天/周×3月</span></span><span class="row-actions"><a class="btn-primary" href="https://www.tiantonglaw.com" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">68</span><span class="row-left"><span class="row-company">外资投行/头部咨询</span><span class="row-loc">📍北京/上海/香港</span><span class="row-tags"><span class="tag orange">⚠️主要批次已截止</span><span class="tag">少量补录</span></span></span><span class="row-info"><span class="info-item"><strong>包含：</strong>高盛/大摩/麦肯锡/BCG/贝恩</span><span class="info-item"><strong>状态：</strong>2025Q4-2026Q1已截止</span><span class="info-item" style="color:#fbbf24;">麦肯锡转正率约50-60%</span></span><span class="row-actions"><span style="color:var(--text2);font-size:.72em;">持续关注各司官网</span></span></div>
+
+    <div class="row"><span class="row-num">69</span><span class="row-left"><span class="row-company">中智咨询 CIIC</span><span class="row-loc">📍上海/北京/广州</span><span class="row-tags"><span class="tag orange">⚠️关注</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>人力资源咨询/管理咨询</span></span><span class="row-actions"><a class="btn-outline" href="https://www.ciic.com.cn/careers" target="_blank">官网</a></span></div>
+  </div>
+</div>
+
+<!-- ================================================================== -->
+<!-- 十、快消/零售 -->
+<!-- ================================================================== -->
+<div class="section" id="fmcg">
+  <h2 class="section-title"><span class="icon">🛍️</span> 快消 / 零售 / 食品饮料 (10家)</h2>
+  <p class="section-desc">实习即管培预备营，转正率高，滚动筛选。</p>
+  <div class="rows">
+    <div class="row header-row"><span class="row-num">#</span><span class="row-left">企业 / 工作地区</span><span class="row-info">面向对象 / 岗位方向</span><span class="row-actions">投递</span></div>
+
+    <div class="row"><span class="row-num">70</span><span class="row-left"><span class="row-company">宝洁 P&G</span><span class="row-loc">📍广州/上海/北京/天津</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅转正60-70%</span><span class="tag orange">招满即关</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>品牌/市场/销售/供应链/研发/财务/IT</span><span class="info-item" style="color:#fbbf24;">管培生预备营</span></span><span class="row-actions"><a class="btn-primary" href="https://careers.pg.com.cn" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">71</span><span class="row-left"><span class="row-company">联合利华 Unilever</span><span class="row-loc">📍上海</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅终面直通卡</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>市场/销售/供应链/研发/财务/数字化</span><span class="info-item" style="color:#4ade80;">优异者跳过秋招笔试</span></span><span class="row-actions"><a class="btn-primary" href="https://www.unilever.com.cn/careers" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">72</span><span class="row-left"><span class="row-company">玛氏 Mars</span><span class="row-loc">📍北京/上海/广州</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅转正</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>管培生/销售/市场/供应链</span></span><span class="row-actions"><a class="btn-primary" href="https://careers.mars.com" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">73</span><span class="row-left"><span class="row-company">欧莱雅 L'Oréal</span><span class="row-loc">📍上海/北京/广州</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅转正</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>市场/数字营销/电商/供应链/研发</span></span><span class="row-actions"><a class="btn-primary" href="https://careers.loreal.com" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">74</span><span class="row-left"><span class="row-company">雀巢 Nestlé</span><span class="row-loc">📍北京/上海/广州</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅转正</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>市场/销售/供应链/研发/数字化</span></span><span class="row-actions"><a class="btn-primary" href="https://www.nestle.com.cn/careers" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">75</span><span class="row-left"><span class="row-company">强生 Johnson & Johnson</span><span class="row-loc">📍上海/北京</span><span class="row-tags"><span class="tag hot">🔥热招</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>市场/销售/供应链/医疗器材/消费者健康</span></span><span class="row-actions"><a class="btn-outline" href="https://www.careers.jnj.com" target="_blank">官网</a></span></div>
+
+    <div class="row"><span class="row-num">76</span><span class="row-left"><span class="row-company">蒙牛 Mengniu</span><span class="row-loc">📍呼和浩特/北京</span><span class="row-tags"><span class="tag orange">⚠️关注</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>市场/销售/供应链/研发</span></span><span class="row-actions"><a class="btn-outline" href="https://www.mengniu.com.cn/careers" target="_blank">官网</a></span></div>
+
+    <div class="row"><span class="row-num">77</span><span class="row-left"><span class="row-company">伊利 Yili</span><span class="row-loc">📍呼和浩特/全国</span><span class="row-tags"><span class="tag orange">⚠️关注</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>市场/销售/供应链/研发/品质</span></span><span class="row-actions"><a class="btn-outline" href="https://yili.zhiye.com" target="_blank">官网</a></span></div>
+
+    <div class="row"><span class="row-num">78</span><span class="row-left"><span class="row-company">可口可乐 Coca-Cola</span><span class="row-loc">📍上海</span><span class="row-tags"><span class="tag orange">⚠️关注</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>市场/销售/供应链/研发</span></span><span class="row-actions"><a class="btn-outline" href="https://www.coca-colacompany.com/careers" target="_blank">官网</a></span></div>
+
+    <div class="row"><span class="row-num">79</span><span class="row-left"><span class="row-company">星巴克 Starbucks</span><span class="row-loc">📍上海/北京/广州/全国门店</span><span class="row-tags"><span class="tag orange">⚠️关注</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>门店管理/市场/数字化/供应链</span></span><span class="row-actions"><a class="btn-outline" href="https://www.starbucks.com.cn/careers" target="_blank">官网</a></span></div>
+  </div>
+</div>
+
+<!-- ================================================================== -->
+<!-- 十一、医药/医疗 -->
+<!-- ================================================================== -->
+<div class="section" id="medical">
+  <h2 class="section-title"><span class="icon">🏥</span> 医药 / 医疗 / 生物科技 (5家)</h2>
+  <p class="section-desc">朝阳产业，研发岗要求高，销售/MKT岗对专业要求相对宽松。</p>
+  <div class="rows">
+    <div class="row header-row"><span class="row-num">#</span><span class="row-left">企业 / 工作地区</span><span class="row-info">面向对象 / 岗位方向</span><span class="row-actions">投递</span></div>
+
+    <div class="row"><span class="row-num">80</span><span class="row-left"><span class="row-company">辉瑞 Pfizer</span><span class="row-loc">📍上海/北京/广州</span><span class="row-tags"><span class="tag orange">⚠️关注</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>研发/医学事务/市场/销售</span></span><span class="row-actions"><a class="btn-outline" href="https://www.pfizer.com.cn/careers" target="_blank">官网</a></span></div>
+
+    <div class="row"><span class="row-num">81</span><span class="row-left"><span class="row-company">恒瑞医药 Hengrui</span><span class="row-loc">📍连云港/上海/南京/北京</span><span class="row-tags"><span class="tag orange">⚠️关注</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>药物研发/临床/注册/医学事务</span></span><span class="row-actions"><a class="btn-outline" href="https://www.hengrui.com/careers" target="_blank">官网</a></span></div>
+
+    <div class="row"><span class="row-num">82</span><span class="row-left"><span class="row-company">药明康德 WuXi AppTec</span><span class="row-loc">📍上海/苏州/武汉/天津/南通</span><span class="row-tags"><span class="tag orange">⚠️关注</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>化学合成/生物分析/DMPK/制剂/IT</span></span><span class="row-actions"><a class="btn-outline" href="https://www.wuxiapptec.com/careers" target="_blank">官网</a></span></div>
+
+    <div class="row"><span class="row-num">83</span><span class="row-left"><span class="row-company">迈瑞医疗 Mindray</span><span class="row-loc">📍深圳</span><span class="row-tags"><span class="tag orange">⚠️关注</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>医疗器械研发/AI/软件/硬件/销售</span></span><span class="row-actions"><a class="btn-outline" href="https://career.mindray.com" target="_blank">官网</a></span></div>
+
+    <div class="row"><span class="row-num">84</span><span class="row-left"><span class="row-company">华大基因 BGI</span><span class="row-loc">📍深圳/北京/武汉</span><span class="row-tags"><span class="tag orange">⚠️关注</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>基因组学/生物信息/AI+BT/仪器研发</span></span><span class="row-actions"><a class="btn-outline" href="https://www.genomics.cn/careers" target="_blank">官网</a></span></div>
+  </div>
+</div>
+
+<!-- ================================================================== -->
+<!-- 十二、房地产/物业 -->
+<!-- ================================================================== -->
+<div class="section" id="estate">
+  <h2 class="section-title"><span class="icon">🏗️</span> 房地产 / 物业 / 商业地产 (5家)</h2>
+  <p class="section-desc">央国企地产需求稳定，物业管理赛道增长。</p>
+  <div class="rows">
+    <div class="row header-row"><span class="row-num">#</span><span class="row-left">企业 / 工作地区</span><span class="row-info">面向对象 / 岗位方向</span><span class="row-actions">投递</span></div>
+
+    <div class="row"><span class="row-num">85</span><span class="row-left"><span class="row-company">华润置地 CR Land</span><span class="row-loc">📍深圳/杭州/北京/上海/重庆/合肥/郑州</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅转正</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>投资/设计/工程/营销/商管/物业管理</span></span><span class="row-actions"><a class="btn-primary" href="https://crc.wintalent.cn" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">86</span><span class="row-left"><span class="row-company">招商蛇口 CMSK</span><span class="row-loc">📍深圳/沈阳/杭州/合肥/郑州/成都/北京/上海/重庆/香港</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅转正</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>投资/设计/工程/营销/商业/物业</span></span><span class="row-actions"><a class="btn-primary" href="https://campus.cmsk1979.com" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">87</span><span class="row-left"><span class="row-company">万科 Vanke</span><span class="row-loc">📍深圳/上海/北京</span><span class="row-tags"><span class="tag orange">⚠️关注</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>仕习生(工程/设计/营销/物业)</span></span><span class="row-actions"><a class="btn-outline" href="https://www.vanke.com/careers" target="_blank">官网</a></span></div>
+
+    <div class="row"><span class="row-num">88</span><span class="row-left"><span class="row-company">保利发展 Poly</span><span class="row-loc">📍广州/北京/上海</span><span class="row-tags"><span class="tag orange">⚠️关注</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>保利和伙人(工程/设计/营销/财务)</span></span><span class="row-actions"><a class="btn-outline" href="https://polycareer.zhiye.com" target="_blank">官网</a></span></div>
+
+    <div class="row"><span class="row-num">89</span><span class="row-left"><span class="row-company">龙湖集团 Longfor</span><span class="row-loc">📍北京/上海/重庆/成都</span><span class="row-tags"><span class="tag orange">⚠️关注</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>冠誉生(商业/物业/长租)</span></span><span class="row-actions"><a class="btn-outline" href="https://www.longfor.com/careers" target="_blank">官网</a></span></div>
+  </div>
+</div>
+
+<!-- ================================================================== -->
+<!-- 十三、物流/供应链 -->
+<!-- ================================================================== -->
+<div class="section" id="logistics">
+  <h2 class="section-title"><span class="icon">🚛</span> 物流 / 供应链 / 快递 (5家)</h2>
+  <p class="section-desc">快递物流行业升级，数字化运营/自动化仓储方向机会多。</p>
+  <div class="rows">
+    <div class="row header-row"><span class="row-num">#</span><span class="row-left">企业 / 工作地区</span><span class="row-info">面向对象 / 岗位方向</span><span class="row-actions">投递</span></div>
+
+    <div class="row"><span class="row-num">90</span><span class="row-left"><span class="row-company">顺丰集团 SF Express</span><span class="row-loc">📍深圳</span><span class="row-tags"><span class="tag hot">🔥热招</span><span class="tag green">✅新鹰计划</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>IT/算法/运营/物流自动化/网点管理</span><span class="info-item" style="color:#fbbf24;">新鹰计划(优者留用)</span></span><span class="row-actions"><a class="btn-primary" href="https://campus.sf-express.com" target="_blank">投递</a></span></div>
+
+    <div class="row"><span class="row-num">91</span><span class="row-left"><span class="row-company">中通快递 ZTO</span><span class="row-loc">📍上海</span><span class="row-tags"><span class="tag orange">⚠️关注</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>IT/算法/运营/物流/供应链</span></span><span class="row-actions"><a class="btn-outline" href="https://zto.zhiye.com" target="_blank">官网</a></span></div>
+
+    <div class="row"><span class="row-num">92</span><span class="row-left"><span class="row-company">极兔速递 J&T Express</span><span class="row-loc">📍上海/深圳</span><span class="row-tags"><span class="tag orange">⚠️关注</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>IT/算法/运营/物流/供应链</span></span><span class="row-actions"><a class="btn-outline" href="https://www.jtexpress.com/careers" target="_blank">官网</a></span></div>
+
+    <div class="row"><span class="row-num">93</span><span class="row-left"><span class="row-company">德邦快递 DEPPON</span><span class="row-loc">📍上海</span><span class="row-tags"><span class="tag orange">⚠️关注</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>IT/运营/物流/供应链/网点管理</span></span><span class="row-actions"><a class="btn-outline" href="https://campus.deppon.com" target="_blank">官网</a></span></div>
+
+    <div class="row"><span class="row-num">94</span><span class="row-left"><span class="row-company">京东物流 JD Logistics</span><span class="row-loc">📍北京/上海/广州</span><span class="row-tags"><span class="tag orange">⚠️关注</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>IT/自动化/仓储规划/供应链/运营</span></span><span class="row-actions"><a class="btn-outline" href="https://zhaopin.jd.com" target="_blank">官网</a></span></div>
+  </div>
+</div>
+
+<!-- ================================================================== -->
+<!-- 十四、新能源/能源 -->
+<!-- ================================================================== -->
+<div class="section" id="energy">
+  <h2 class="section-title"><span class="icon">⚡</span> 新能源 / 能源 (5家)</h2>
+  <p class="section-desc">双碳目标驱动，储能/光伏/风电方向人才需求旺盛。</p>
+  <div class="rows">
+    <div class="row header-row"><span class="row-num">#</span><span class="row-left">企业 / 工作地区</span><span class="row-info">面向对象 / 岗位方向</span><span class="row-actions">投递</span></div>
+
+    <div class="row"><span class="row-num">95</span><span class="row-left"><span class="row-company">远景能源 Envision</span><span class="row-loc">📍上海/江阴</span><span class="row-tags"><span class="tag orange">⚠️关注</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>风电/AI/储能/能源互联网/数字化</span></span><span class="row-actions"><a class="btn-outline" href="https://www.envision-group.com/careers" target="_blank">官网</a></span></div>
+
+    <div class="row"><span class="row-num">96</span><span class="row-left"><span class="row-company">金风科技 Goldwind</span><span class="row-loc">📍北京/乌鲁木齐</span><span class="row-tags"><span class="tag orange">⚠️关注</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>风电/储能/数字化/电气/机械</span></span><span class="row-actions"><a class="btn-outline" href="https://www.goldwind.com/careers" target="_blank">官网</a></span></div>
+
+    <div class="row"><span class="row-num">97</span><span class="row-left"><span class="row-company">阳光电源 Sungrow</span><span class="row-loc">📍合肥</span><span class="row-tags"><span class="tag orange">⚠️关注</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>光伏逆变器/储能/电力电子/AI</span></span><span class="row-actions"><a class="btn-outline" href="https://www.sungrowpower.com/careers" target="_blank">官网</a></span></div>
+
+    <div class="row"><span class="row-num">98</span><span class="row-left"><span class="row-company">隆基绿能 LONGi</span><span class="row-loc">📍西安</span><span class="row-tags"><span class="tag orange">⚠️关注</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>光伏材料/电池/组件/数字化</span></span><span class="row-actions"><a class="btn-outline" href="https://www.longi.com/careers" target="_blank">官网</a></span></div>
+
+    <div class="row"><span class="row-num">99</span><span class="row-left"><span class="row-company">通威集团 Tongwei</span><span class="row-loc">📍成都/合肥/包头</span><span class="row-tags"><span class="tag orange">⚠️关注</span></span></span><span class="row-info"><span class="info-item"><strong>面向：</strong>2027届</span><span class="info-item"><strong>岗：</strong>光伏材料/水产/饲料/IT</span></span><span class="row-actions"><a class="btn-outline" href="https://www.tongwei.com/careers" target="_blank">官网</a></span></div>
+  </div>
+</div>
+
+<!-- ================================================================== -->
+<!-- 投递平台 -->
+<!-- ================================================================== -->
+<div class="section" id="platforms">
+  <h2 class="section-title"><span class="icon">🔗</span> 常用投递平台 & 信息渠道</h2>
+  <div class="platform-grid">
+    <div class="platform-card"><span class="plat-name">🎓 国家大学生就业服务平台</span><a class="btn-primary" href="https://24365.smartedu.cn" target="_blank">24365.smartedu.cn</a></div>
+    <div class="platform-card"><span class="plat-name">💼 牛客网</span><a class="btn-primary" href="https://www.nowcoder.com" target="_blank">nowcoder.com</a></div>
+    <div class="platform-card"><span class="plat-name">🎯 应届生求职网</span><a class="btn-primary" href="https://www.yingjiesheng.com" target="_blank">yingjiesheng.com</a></div>
+    <div class="platform-card"><span class="plat-name">📋 超级简历(校招日历)</span><a class="btn-primary" href="https://www.wondercv.com/xiaozhao" target="_blank">wondercv.com/xiaozhao</a></div>
+    <div class="platform-card"><span class="plat-name">💻 LeetCode(内推讨论)</span><a class="btn-primary" href="https://leetcode.cn/discuss" target="_blank">leetcode.cn/discuss</a></div>
+    <div class="platform-card"><span class="plat-name">📊 51job前程无忧</span><a class="btn-outline" href="https://www.51job.com" target="_blank">51job.com</a></div>
+    <div class="platform-card"><span class="plat-name">🔄 BOSS直聘</span><a class="btn-outline" href="https://www.zhipin.com" target="_blank">zhipin.com</a></div>
+    <div class="platform-card"><span class="plat-name">🧭 智联招聘</span><a class="btn-outline" href="https://www.zhaopin.com" target="_blank">zhaopin.com</a></div>
+    <div class="platform-card"><span class="plat-name">🏫 高校就业信息网</span><span><a class="btn-outline" href="https://scc.pku.edu.cn" target="_blank">北大</a> <a class="btn-outline" href="https://career.tsinghua.edu.cn" target="_blank">清华</a> <a class="btn-outline" href="https://www.career.zju.edu.cn" target="_blank">浙大</a></span></div>
+  </div>
+</div>
+
+<!-- ================================================================== -->
+<!-- 时间线 -->
+<!-- ================================================================== -->
+<div class="section" id="timeline">
+  <h2 class="section-title"><span class="icon">⏱️</span> 2026年暑期实习投递时间线</h2>
+  <div class="timeline">
+    <div class="timeline-item"><div class="timeline-dot cool"></div><div class="timeline-month">1–2月</div><div class="timeline-action">启动网申<br>改简历刷题<br>快消/券商开放</div></div>
+    <div class="timeline-item"><div class="timeline-dot hot"></div><div class="timeline-month">3月</div><div class="timeline-action">🔥 黄金投递月<br>90%大厂集中开放</div></div>
+    <div class="timeline-item"><div class="timeline-dot hot"></div><div class="timeline-month">4月</div><div class="timeline-action">面试高峰期<br>笔试群面密集</div></div>
+    <div class="timeline-item"><div class="timeline-dot warm"></div><div class="timeline-month">5月</div><div class="timeline-action">补录/捡漏<br>少量HC释放</div></div>
+    <div class="timeline-item"><div class="timeline-dot warm"></div><div class="timeline-month">6月</div><div class="timeline-action">收尾阶段<br>仍有补录机会</div></div>
+    <div class="timeline-item"><div class="timeline-dot cool"></div><div class="timeline-month">7–8月</div><div class="timeline-action">实习进行中<br>转正评估→锁定Offer</div></div>
+  </div>
+</div>
+
+<!-- ==================== 关键数据 ==================== -->
+<div class="alert info" style="margin-top:20px;">
+  <h3>📈 2026年暑期实习市场关键数据</h3>
+  <ul>
+    <li><strong>AI岗位爆发：</strong>新发AI岗位量同比增长约12倍，平均月薪60,738元</li>
+    <li><strong>大厂规模：</strong>腾讯10,000+、字节7,000+、百度5,000+，五家大厂合计数万实习岗位</li>
+    <li><strong>转正率：</strong>各厂转正率普遍50%以上，实习逐步成为校招主渠道</li>
+    <li><strong>最热岗位：</strong>大模型算法（第1）、产品经理、算法工程师</li>
+    <li><strong>薪资参考：</strong>互联网研发/产品实习日薪最高500元</li>
+  </ul>
+</div>
+
+</div>
+
+<div class="footer">
+  <p>📅 更新于 2026年6月4日 | 信息来源：企业官网·24365平台·高校就业网·牛客网等公开渠道</p>
+  <p>⚠️ 投递前请在各企业官网确认最新信息（截止日期、岗位状态可能有变动） | <a href="#">↑ 返回顶部</a></p>
+</div>
+
+<script>
+  // ===== 搜索 & 筛选 =====
+  let activeKeyword = '';
+  function doSearch() {
+    const q = document.getElementById('searchInput').value.trim().toLowerCase();
+    const rows = document.querySelectorAll('.row:not(.header-row)');
+    const sections = document.querySelectorAll('.section');
+    const chips = document.querySelectorAll('.search-chip');
+    let visibleCount = 0;
+
+    // 先收集哪些section有可见行
+    const secVis = new Map();
+
+    rows.forEach(row => {
+      // 收集该行的所有文本
+      const text = row.textContent.toLowerCase();
+      const company = (row.querySelector('.row-company')?.textContent || '').toLowerCase();
+      const loc = (row.querySelector('.row-loc')?.textContent || '').toLowerCase();
+      const allTags = Array.from(row.querySelectorAll('.tag')).map(t => t.textContent).join(' ').toLowerCase();
+      const combined = company + ' ' + loc + ' ' + allTags + ' ' + text;
+
+      let show = true;
+
+      // 输入框关键词匹配
+      if (q) {
+        show = combined.includes(q);
+      }
+
+      // 芯片关键词匹配
+      if (activeKeyword && show) {
+        const kw = activeKeyword.toLowerCase();
+        if (kw === '✅可转正') {
+          show = allTags.includes('转正') || allTags.includes('留用') || allTags.includes('offer');
+        } else if (kw === '⏰即将截止') {
+          show = allTags.includes('截止') || allTags.includes('6月14');
+        } else if (kw === 'ai/大模型') {
+          show = combined.includes('ai') || combined.includes('大模型') || combined.includes('llm');
+        } else if (kw === '金融/银行') {
+          show = combined.includes('银行') || combined.includes('金融') || combined.includes('券商');
+        } else if (kw === '新能源') {
+          show = combined.includes('新能源') || combined.includes('电池') || combined.includes('储能') || combined.includes('光伏') || combined.includes('风电');
+        } else if (kw === '医药') {
+          show = combined.includes('医药') || combined.includes('医疗') || combined.includes('药') || combined.includes('生物');
+        } else if (kw === '游戏') {
+          show = combined.includes('游戏') || combined.includes('互娱');
+        } else if (kw === '国企/央企') {
+          show = combined.includes('中国移动') || combined.includes('中国电信') || combined.includes('中国联通') || combined.includes('国家电网') || combined.includes('中国石油') || combined.includes('中国石化') || combined.includes('中广核') || combined.includes('信通院');
+        } else if (kw === '芯片') {
+          show = combined.includes('芯片') || combined.includes('ic') || combined.includes('cpu') || combined.includes('gpu') || combined.includes('npu') || combined.includes('半导体');
+        } else if (kw === '自动驾驶') {
+          show = combined.includes('自动驾驶') || combined.includes('智能驾驶') || combined.includes('智能座舱');
+        } else if (kw === '🔥热招中') {
+          show = allTags.includes('热招');
+        } else if (kw === '快消') {
+          show = combined.includes('宝洁') || combined.includes('联合利华') || combined.includes('玛氏') || combined.includes('欧莱雅') || combined.includes('雀巢') || combined.includes('可口可乐') || combined.includes('蒙牛') || combined.includes('伊利') || combined.includes('星巴克');
+        } else {
+          // 城市/普通关键词匹配
+          show = combined.includes(kw);
+        }
+      }
+
+      if (show) {
+        row.classList.remove('hidden');
+        visibleCount++;
+        // 找到所属section
+        let sec = row.closest('.section');
+        if (sec) secVis.set(sec, true);
+      } else {
+        row.classList.add('hidden');
+      }
+    });
+
+    // 显示/隐藏section
+    sections.forEach(sec => {
+      if (secVis.has(sec)) {
+        sec.classList.remove('hidden');
+        // 同时隐藏该section内的空表头
+        const headerRow = sec.querySelector('.row.header-row');
+        if (headerRow) headerRow.classList.remove('hidden');
+      } else if (q || activeKeyword) {
+        sec.classList.add('hidden');
+      } else {
+        sec.classList.remove('hidden');
+      }
+    });
+
+    document.getElementById('resultCount').textContent = q || activeKeyword ? `匹配 ${visibleCount} 条` : `共 ${rows.length} 条`;
+
+    // 高亮当前激活的芯片
+    chips.forEach(c => {
+      c.classList.remove('active');
+      if (c.textContent.includes(activeKeyword)) c.classList.add('active');
+    });
+  }
+
+  function chipClick(el, keyword) {
+    if (el.classList.contains('active')) {
+      activeKeyword = '';
+      document.getElementById('searchInput').value = '';
+    } else {
+      activeKeyword = keyword;
+    }
+    doSearch();
+    // 更新芯片样式
+    document.querySelectorAll('.search-chip').forEach(c => c.classList.remove('active'));
+    if (activeKeyword) el.classList.add('active');
+  }
+
+  function clearSearch() {
+    activeKeyword = '';
+    document.getElementById('searchInput').value = '';
+    document.querySelectorAll('.search-chip').forEach(c => c.classList.remove('active'));
+    doSearch();
+    document.getElementById('searchInput').focus();
+  }
+
+  // 键盘快捷键：ESC清除搜索
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { clearSearch(); }
+    // Ctrl+K / Cmd+K 聚焦搜索框
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      e.preventDefault();
+      document.getElementById('searchInput').focus();
+    }
+  });
+</script>
+</body>
+</html>
