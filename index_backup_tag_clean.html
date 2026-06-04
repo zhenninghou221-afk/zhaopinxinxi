@@ -465,6 +465,12 @@
 	      <span class="search-chip" data-cat="job" onclick="chipClick(this,'游戏')">🎮 游戏</span>
 	      <span class="search-chip" data-cat="job" onclick="chipClick(this,'国企/央企')">🏛️ 国企/央企</span>
 	    </div>
+	    <!-- 第三行：特殊标签 -->
+	    <div class="search-chips-row">
+	      <span class="search-chip-cat">🏷️ 标签</span>
+	      <span class="search-chip" data-cat="tag" onclick="chipClick(this,'🔥热招中')">🔥 热招中</span>
+	      <span class="search-chip" data-cat="tag" onclick="chipClick(this,'✅可转正')">✅ 可转正</span>
+	    </div>
 	    
 	  </div>
 	  <div class="search-summary"</div>
@@ -3019,6 +3025,7 @@
         // 检查各分类是否有选中项
         const hasLoc = selectedFilters.loc.size > 0;
         const hasJob = selectedFilters.job.size > 0;
+        const hasTag = selectedFilters.tag.size > 0;
 
         rows.forEach(row => {
           const company = (row.querySelector('.row-company')?.textContent || '').toLowerCase();
@@ -3073,6 +3080,22 @@
             show = matchJob;
           }
 
+          // 4. 特殊标签筛选（OR：满足任一选中标签即可）
+          if (hasTag && show) {
+            let matchTag = false;
+            for (const kw of selectedFilters.tag) {
+              const kwl = kw.toLowerCase();
+              if (kwl === '✅可转正') {
+                if (allTags.includes('转正') || allTags.includes('留用') || allTags.includes('offer')) { matchTag = true; break; }
+              } else if (kwl === '🔥热招中') {
+                if (allTags.includes('热招')) { matchTag = true; break; }
+              } else {
+                if (combined.includes(kwl)) { matchTag = true; break; }
+              }
+            }
+            show = matchTag;
+          }
+
           if (show) {
             row.classList.remove('hidden');
             visibleCount++;
@@ -3082,7 +3105,7 @@
         });
 
         // 更新结果计数
-        const hasAnyFilter = q || hasLoc || hasJob;
+        const hasAnyFilter = q || hasLoc || hasJob || hasTag;
         document.getElementById('resultCount').textContent = hasAnyFilter
           ? '匹配 ' + visibleCount + ' 条'
           : '共 ' + rows.length + ' 条';
@@ -3094,7 +3117,7 @@
         const allSelected = [
           ...Array.from(selectedFilters.loc).map(k => '📍' + k),
           ...Array.from(selectedFilters.job).map(k => '💼' + k),
-          
+          ...Array.from(selectedFilters.tag).map(k => '🏷️' + k.replace(/^[🔥✅⏰]+/, ''))
         ];
 
         if (allSelected.length > 0) {
